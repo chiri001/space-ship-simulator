@@ -53,8 +53,8 @@ public class DrawingCanvas extends JPanel {
     protected void paintComponent (Graphics g) { 
 	    super.paintComponent(g); 
         //get dimensions of the container and add some padding
-        int width = getWidth() - 50;
-        int height = getHeight() - 50;
+        int width = getWidth() - 15;
+        int height = getHeight() - 15;
 
         switch(shape){ 
             case RECTANGLE:

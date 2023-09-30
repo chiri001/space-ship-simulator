@@ -67,8 +67,8 @@ public class MyPanel extends JPanel {
 
         //circle drawing where the map will showcase
         DrawingCanvas centralCircle = new DrawingCanvas 
-                                        (DrawingCanvas.Shape.CIRCLE, 20, 
-                                        30);
+                                        (DrawingCanvas.Shape.CIRCLE, 30, 
+                                        10);
         westPanel.add(centralCircle, BorderLayout.CENTER);
         
     }

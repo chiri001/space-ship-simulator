@@ -1,8 +1,30 @@
 ------------------------------------------------------------------------------
  - Name : Rennie Kipchirchir
- - Assignment one: Buttons and widgets
+ - Spaceship simulator project
  - File: README
- - Date modified: 09/22/23
+ - Date modified: 09/29/23
+-----------------------------------------------------------------------------
+                        Project Description
+-----------------------------------------------------------------------------
+
+I am makeing a spaceship radar simulator.
+The radar system will help the spaceship avoid collission. The objects that 
+could cause collissions include: other spaceships, satellites, space debris, 
+and asteroids. The radar system wil scan its sorroudings for objects, if an 
+object is encountered near its path, it gets the size and velocity of the
+object and then finds the distance of object and probability of impact. If there
+is a high probability of impact, it calculates the nearest safe path to travel. 
+The user interface wil be inform of a radar display that shows the objects in 
+accordance with their size to scale near the spaceship. it also displays
+number of objects within the spaceships's sorroundings. When an object
+is clicked it shows the objects distance and probability of impact. Users could
+also move the objects by dragging them across the map. There will also be 
+an option to zoom in and out of the map. It will also have a scanner that 
+simulates the rotating scanner. it will also have a fastforward and rewind
+option to change speed of the simulator. Up, down, left, and right button to 
+move the map. Finally it will have a start, stop, find new path, reset button
+and an alarm button if collission cannot be avoided/ potential impact.
+
 -----------------------------------------------------------------------------
                         Acknowledgements
 -----------------------------------------------------------------------------
@@ -15,22 +37,26 @@
 -----------------------------------------------------------------------------
                         Correctly Implemented
 -----------------------------------------------------------------------------
-To the best of my knowledge everything works well. One issue I noted however is 
-sometimes I got an error on terminal when compiling Java Main class that 
-said that PasswordField.java uses or overrides a deprecated API but if I 
-recompiled everything worked fine. I would like to get more insight on this 
-issue.
+I have implemented everything correctly to the best of my knowledge
 
 -----------------------------------------------------------------------------
                         Architecture
 -----------------------------------------------------------------------------
 
-I have implemented the buttons and widjets using the java swing frameworks.
-This has allowed me to create a class for every widget or button which is then
-used by the main class.
+Main class depends on MyFrame class to create the window frame
+
+MyFrame class depends on MyPanel class to create layout of the window frame.
+It also relies on JFrame to create the window frame.
+
+MyPanel relies on:
+    DrawingCanvas class to draw the shapes as instructed by client
+    MyButton class to create buttons for the panel
+    JPanel to create a panel to store elements
+
+--------------------------------------------------------------------------
 
 
 How to compile: 
 ---------------
-1. run javac Main.java
+1. run javac *.java
 2. run java Main
