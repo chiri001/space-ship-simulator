@@ -17,24 +17,30 @@ public class MyPanel extends JPanel {
     */
     public MyPanel() {
 
-        setLayout(new BorderLayout());/*new layout for the panel */
+        setLayout(new GridBagLayout());/*new layout for the panel */
+        GridBagConstraints constraint = new GridBagConstraints();
 
         //functions to set the layout of the window
-        create_south_layout();
-        create_east_layout();
-        create_west_layout();
+        create_south_layout(constraint);
+        create_east_layout(constraint);
+        create_west_layout(constraint);
 
     }
 
     /*function creates the layout of the south panel
      * It takes no parameter
      */
-    private void create_south_layout() {
+    private void create_south_layout(GridBagConstraints constraint) {
         /*create a new jpanel with given dimensions */
         JPanel southPanel = new  JPanel(new GridLayout(1, 0));
         southPanel.setBorder(BorderFactory.createLineBorder(
-                                                    Color.BLACK, 5));
-        add(southPanel, BorderLayout.SOUTH);
+                                                    Color.BLACK, 2));
+        constraint.gridx = 0;
+        constraint.gridy = 1;
+        constraint.weightx = 0.6; //take 60% the x space
+        constraint.weighty = 0.1; //take 30% the y space
+        constraint.fill = GridBagConstraints.BOTH;//stretches in both directions
+        add(southPanel, constraint);
 
         //calls a function that creates buttons for the bottom panel
         addButtonToPanel(southPanel, "START", Color.GREEN);
@@ -58,12 +64,16 @@ public class MyPanel extends JPanel {
     /*function that creates the layout for the west side of the panel
      * takes no parameter
      */
-    private void create_west_layout() {
+    private void create_west_layout(GridBagConstraints constraint) {
         /*create a new jpanel with given dimensions */
         JPanel westPanel = new  JPanel(new BorderLayout());
         westPanel.setBorder(BorderFactory.createLineBorder(
-                                                    Color.BLACK, 5));
-        add(westPanel, BorderLayout.CENTER);
+                                                    Color.BLACK, 2));
+        constraint.gridx = 0;
+        constraint.gridy = 0;
+        constraint.weightx = 0.6; //take 60% the x space
+        constraint.weighty = 0.9; //take 70% the y space
+        add(westPanel, constraint);
 
         //circle drawing where the map will showcase
         DrawingCanvas centralCircle = new DrawingCanvas 
@@ -77,32 +87,42 @@ public class MyPanel extends JPanel {
      * Function that creates the east Layout of the panel
      * takes no parameters
      */
-    private void create_east_layout() {
-        JPanel eastPanel = new  JPanel(new GridLayout(3, 1));
+    private void create_east_layout(GridBagConstraints constraint) {
+        JPanel eastPanel = new  JPanel(new GridBagLayout());
         eastPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 
-                                                            5));
-        add(eastPanel, BorderLayout.EAST);
+                                                            2));
+        constraint.gridx = 1;
+        constraint.gridy = 0;
+        constraint.weightx = 0.4; //take 40% the x space
+        constraint.weighty = 1; //take 100% the y space
+        add(eastPanel, constraint);
 
-        //a jpanel to hold the drawing to display object information
-        JPanel drawingPanel = new JPanel(new BorderLayout());
-        eastPanel.add(drawingPanel, BorderLayout.NORTH);
+        GridBagConstraints gbc = new GridBagConstraints();
 
         //object information rectangle
         DrawingCanvas objInfoRect = new DrawingCanvas 
                                         (DrawingCanvas.Shape.RECTANGLE,
                                         10, 10);
-        drawingPanel.add(objInfoRect, BorderLayout.CENTER);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1;
+        gbc.weighty = 0.5; //take half the y space
+        gbc.fill = GridBagConstraints.BOTH;//stretches in both directions
+        eastPanel.add(objInfoRect, gbc);
 
 
         //a jpanel to hold the buttons
-        JPanel btnPanel = new JPanel();
-        btnPanel.setLayout(new GridLayout(4, 2));
-        eastPanel.add(btnPanel, BorderLayout.CENTER);
+        JPanel btnPanel = new JPanel(new GridLayout(4, 2));
+        gbc.gridy = 1;
+        gbc.weighty = 0.5;
+        //adding some padding
+        gbc.insets = new Insets(10, 10, 10, 10);
+        eastPanel.add(btnPanel, gbc);
 
         //the arrow buttons
-        JPanel yArrowPanel = new JPanel(new BorderLayout());
+        JPanel yArrowPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         btnPanel.add(yArrowPanel); //holds y axis arrow button(up and down)
-        JPanel xArrowPanel = new JPanel(new BorderLayout());
+        JPanel xArrowPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         btnPanel.add(xArrowPanel);//holds x axis arrow button(left and right)
 
         //calls a function that creates buttons and adds to given panel
@@ -116,7 +136,7 @@ public class MyPanel extends JPanel {
                                                         BorderLayout.WEST);
 
         //zoom buttons
-        JPanel zoomPanel = new JPanel(new BorderLayout());
+        JPanel zoomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         btnPanel.add(zoomPanel);
         addButtonToPanel(zoomPanel, "Z(+)", Color.GRAY, 
                                                         BorderLayout.WEST);
@@ -124,24 +144,12 @@ public class MyPanel extends JPanel {
                                                         BorderLayout.EAST);
 
         //speed buttons
-        JPanel speedPanel = new JPanel(new BorderLayout());
+        JPanel speedPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         btnPanel.add(speedPanel);
         addButtonToPanel(speedPanel, "<<", Color.GRAY, 
                                                         BorderLayout.WEST);
         addButtonToPanel(speedPanel, ">>", Color.GRAY, 
                                                         BorderLayout.EAST);
-
-        //a jpanel to hold the drawing to display the maps key
-        JPanel keyPanel = new JPanel(new BorderLayout());
-        eastPanel.add(keyPanel, BorderLayout.SOUTH);
-
-        //rectangle to showcase object information
-        DrawingCanvas keyRect = new DrawingCanvas 
-                                        (DrawingCanvas.Shape.RECTANGLE,
-                                        10, 10);
-        keyPanel.add(keyRect, BorderLayout.CENTER);
-
-
     }
 
     /*function that creates buttons and adds it to panel 

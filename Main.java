@@ -8,16 +8,29 @@
  * entire program.
  */
 
+import javax.swing.JFrame;
 
 /*main class that starts the program */
-public class Main {
+public class Main extends JFrame{
     public static void main(String [] args){
         new Main();
     }
 
     public Main() {
-        /*create a frame and show on window */
-        MyFrame frame = new MyFrame();
-        frame.setVisible(true);
+        /*sets titile  of window*/
+        setTitle("Spaceship Radar Simulator"); 
+
+        //set up the window's layout
+        setSize(800, 700);
+
+        /*ensure the program closes on exit */
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        /*call a jpanel to open a panel in window */
+        MyPanel panel = new MyPanel();
+        add(panel);
+
+        /*make the frame visible */
+        setVisible(true);
     }
 }

@@ -20,6 +20,8 @@ public class DrawingCanvas extends JPanel {
 
     private Shape shape; /*represents different shapes in Shape framework */
     private int x_cord, y_cord; //x and y coordinates for drawing shape
+    private int horizontalPadding = 15;
+    private int verticalPadding = 15;
 
     //constructor
     //parameters: takes a shape, x coordinate, and y coordinate
@@ -38,8 +40,8 @@ public class DrawingCanvas extends JPanel {
         Container parent = this.getParent(); /*get parent container */
 
         if(parent != null) {
-            int width = parent.getWidth() - x_cord - 30;//padding on left
-            int height = parent.getHeight() - y_cord - 30; //padding  on top
+            int width = parent.getWidth() - (2 * horizontalPadding);
+            int height = parent.getHeight() - (2 * verticalPadding);
             return new Dimension(width, height); //new preferred width
         }
 
@@ -53,17 +55,19 @@ public class DrawingCanvas extends JPanel {
     protected void paintComponent (Graphics g) { 
 	    super.paintComponent(g); 
         //get dimensions of the container and add some padding
-        int width = getWidth() - 15;
-        int height = getHeight() - 15;
+        int width = getWidth() - (2 * horizontalPadding);
+        int height = getHeight() - (2 * verticalPadding);
 
         switch(shape){ 
             case RECTANGLE:
-                g.drawRect(x_cord, y_cord, width, height); //draw
-                break; //stop
+                g.drawRect(horizontalPadding, verticalPadding, width, height);
+                break;
             case CIRCLE:
                 int diameter = Math.min(width, height);
-                g.drawOval(x_cord, y_cord, diameter, diameter);
-                break; //stop
+                int x = (getWidth() - diameter) /2;
+                int y = (getHeight() - diameter) /2;
+                g.drawOval(x, y, diameter, diameter);
+                break;
         }
         
     }
