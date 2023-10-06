@@ -15,16 +15,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-// setting up a drawing canvas interface for the map
-interface DrawingCanvas {
-    /* draw 
-     * parameters include a 2d graphics and dimensions of the drawing canvas
-     * drawing interface for the file
-     * returns nothing
-    */
-    void draw(Graphics2D g, Dimension canvasSize);
-}
-
 //class that creates a circle drawing using the drawing canvas interface
 class CircleCanvas implements DrawingCanvas {
     /* draw 
@@ -62,6 +52,7 @@ class SpaceShipCanvas implements DrawingCanvas {
         int smallTriangleHeight = spaceshipHeight / 3; 
 
         //TODO: randomize the division so that it can appear anywher on map
+
         int[] xPoints = {
             canvasSize.height / 3 + spaceshipHeight / 2,//base level
             //top of left compartment
@@ -184,6 +175,7 @@ class MyMap extends JPanel {
     private SpaceShipCanvas spaceShipCanvas; //spaceship drawing class
     private PlanetCanvas planetCanvas;//planet drawing class
     private PointerCanvas pointerCanvas; //pointer hand drawing class
+    private Timer timer;
 
     public MyMap() {
         //create drawings
@@ -191,9 +183,17 @@ class MyMap extends JPanel {
         this.spaceShipCanvas = new SpaceShipCanvas();
         this.planetCanvas = new PlanetCanvas();
         this.pointerCanvas = new PointerCanvas();
-        Timer timer = new Timer(50, 
+        timer = new Timer(50, 
                                 new PointerUpdateListener(pointerCanvas, this));
+        
+    }
+
+    public void start_simulation() {
         timer.start();
+    }
+
+    public void stop_simulation() {
+        timer.stop();
     }
 
     /* PointerUpdateListener
@@ -212,7 +212,6 @@ class MyMap extends JPanel {
         pointerCanvas.draw(graphic_2d, getSize());
     }
 }
-
 
 
 
