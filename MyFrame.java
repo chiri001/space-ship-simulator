@@ -8,6 +8,8 @@
  * items
  */
 
+import java.awt.Dimension;
+
 import javax.swing.*;
 
 /*class that creates a window frame for the program when called in main */
@@ -20,6 +22,8 @@ public class MyFrame extends JFrame {
 
         //set up the window's layout
         setSize(800, 700);
+        
+        setMinimumSize(new Dimension(300, 300));
 
         /*call a jpanel to open a panel in window */
         MyPanel panel = new MyPanel();

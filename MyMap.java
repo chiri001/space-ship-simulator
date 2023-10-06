@@ -12,6 +12,7 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 import javax.swing.*;
 
@@ -100,7 +101,7 @@ class PlanetCanvas implements DrawingCanvas {
         int x = (int) ((canvasSize.width - diameter) / 1.5);
         int y = (int) ((canvasSize.height - diameter) / 1.5);
 
-        g.setColor(Color.gray);
+        g.setColor(Color.blue);
         g.fillOval(x, y, diameter, diameter);
     }
 }
@@ -169,13 +170,79 @@ class PointerUpdateListener implements ActionListener {
     }
 }
 
+
+//asteroid class that draws an asteroid
+class AsteroidCanvas implements DrawingCanvas {
+    private double xOffset = 1.5;;
+    private double yOffset = 4.5;
+    /* draw 
+     * parameters include a 2d graphics and dimesnions of drawing canvas
+     * returns nothing
+    */
+    public void draw(Graphics2D g, Dimension canvasSize) {
+        
+        int baseSize = Math.min(canvasSize.width, canvasSize.height);
+
+        //length of spaceship landing base
+        int asteroidSize = baseSize / Global.SCALE; 
+        
+        //calculating x and y coordinate of planet
+        //TODO: randomize the division
+        int centerX = (int) (canvasSize.width / xOffset);
+        int centerY = (int) (canvasSize.height / yOffset);
+        
+        int[] xPoints = {
+            centerX - asteroidSize / 2,
+            centerX,
+            centerX - asteroidSize / 2,
+            centerX - asteroidSize / 2,
+            centerX,
+            centerX + asteroidSize / 2,
+            centerX + asteroidSize / 2,
+            centerX,
+        };
+
+        int[] yPoints = {
+            centerY,
+            centerY - asteroidSize / 2,
+            centerY,
+            centerY + asteroidSize / 2,
+            centerY + asteroidSize / 2,
+            centerY,
+            centerY - asteroidSize / 2,
+            centerY
+        };
+
+        g.setColor(Color.gray);
+        g.fillPolygon(xPoints, yPoints, 8);
+        
+    }
+
+    public void updateLocation() {
+        Random rand = new Random();
+
+        double minX = 1.5;
+        double maxX = 4.5;
+
+        xOffset =  minX + (maxX - minX) * rand.nextDouble();
+        yOffset=  minX + (maxX - minX) * rand.nextDouble();
+    }
+}
+
 //My map class that is incharge of handling elements in the map
 class MyMap extends JPanel {
     private CircleCanvas circleCanvas; //circle boundary for map
     private SpaceShipCanvas spaceShipCanvas; //spaceship drawing class
     private PlanetCanvas planetCanvas;//planet drawing class
     private PointerCanvas pointerCanvas; //pointer hand drawing class
+    private AsteroidCanvas asteroidCanvas;
+
+
+    //timer variables
     private Timer timer;
+    private Timer asteroidTimer;
+    private Timer shipTimer;
+    private Timer planetTimer;
 
     public MyMap() {
         //create drawings
@@ -183,13 +250,19 @@ class MyMap extends JPanel {
         this.spaceShipCanvas = new SpaceShipCanvas();
         this.planetCanvas = new PlanetCanvas();
         this.pointerCanvas = new PointerCanvas();
+        this.asteroidCanvas = new AsteroidCanvas();
         timer = new Timer(50, 
                                 new PointerUpdateListener(pointerCanvas, this));
+        asteroidTimer = new Timer(1000, e -> {
+            asteroidCanvas.updateLocation();
+            repaint();
+        });
         
     }
 
     public void start_simulation() {
         timer.start();
+        asteroidTimer.start();
     }
 
     public void stop_simulation() {
@@ -209,6 +282,7 @@ class MyMap extends JPanel {
         circleCanvas.draw(graphic_2d, getSize());
         spaceShipCanvas.draw(graphic_2d, getSize());
         planetCanvas.draw(graphic_2d, getSize());
+        asteroidCanvas.draw(graphic_2d, getSize());
         pointerCanvas.draw(graphic_2d, getSize());
     }
 }
