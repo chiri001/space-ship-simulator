@@ -66,7 +66,7 @@ public class MyPanel extends JPanel {
      */
     private void create_west_layout(GridBagConstraints constraint) {
         /*create a new jpanel with given dimensions */
-        JPanel westPanel = new  JPanel(new BorderLayout());
+        JPanel westPanel = new  JPanel(new GridBagLayout());
         westPanel.setBorder(BorderFactory.createLineBorder(
                                                     Color.BLACK, 2));
         constraint.gridx = 0;
@@ -76,11 +76,12 @@ public class MyPanel extends JPanel {
         add(westPanel, constraint);
 
         //circle drawing where the map will showcase
-        DrawingCanvas centralCircle = new DrawingCanvas 
-                                        (DrawingCanvas.Shape.CIRCLE, 30, 
-                                        10);
-        westPanel.add(centralCircle, BorderLayout.CENTER);
-        
+        MyMap map = new MyMap();
+        GridBagConstraints mapConstraints = new GridBagConstraints();
+        mapConstraints.fill = GridBagConstraints.BOTH;
+        mapConstraints.weightx = 1.0;
+        mapConstraints.weighty = 1.0;
+        westPanel.add(map, mapConstraints);
     }
 
     /*
@@ -99,16 +100,15 @@ public class MyPanel extends JPanel {
 
         GridBagConstraints gbc = new GridBagConstraints();
 
-        //object information rectangle
-        DrawingCanvas objInfoRect = new DrawingCanvas 
-                                        (DrawingCanvas.Shape.RECTANGLE,
-                                        10, 10);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1;
-        gbc.weighty = 0.5; //take half the y space
-        gbc.fill = GridBagConstraints.BOTH;//stretches in both directions
-        eastPanel.add(objInfoRect, gbc);
+        // //object information rectangle
+        // DrawingCanvas objInfoRect = new DrawingCanvas
+        //                                         (DrawingCanvas.Shape.RECTANGLE);
+        // gbc.gridx = 0;
+        // gbc.gridy = 0;
+        // gbc.weightx = 1;
+        // gbc.weighty = 0.5; //take half the y space
+        // gbc.fill = GridBagConstraints.BOTH;//stretches in both directions
+        // eastPanel.add(objInfoRect, gbc);
 
 
         //a jpanel to hold the buttons
