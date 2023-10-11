@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 //My map class that is incharge of handling elements in the map
-class MyMap extends JPanel {
+class MyMap extends JPanel implements ObjectListener {
     private CircleCanvas circleCanvas; //circle boundary for map
     private SpaceShipCanvas spaceShipCanvas; //spaceship drawing class
     private PlanetCanvas planetCanvas;//planet drawing class
@@ -32,12 +32,16 @@ class MyMap extends JPanel {
     private Timer shipTimer;
     private Timer planetTimer;
 
+
+    private ObjectInformation objectInfoInstance;
+
     public MyMap() {
         //create drawings
         this.circleCanvas = new CircleCanvas();
         this.spaceShipCanvas = new SpaceShipCanvas();
-        this.planetCanvas = new PlanetCanvas();
+        this.planetCanvas = new PlanetCanvas(this);
         this.pointerCanvas = new PointerCanvas();
+        this.addMouseListener(planetCanvas);
         this.asteroidCanvas = new AsteroidCanvas();
         this.debriCanvas = new SpaceDebriCanvas();
         this.sateLite = new SateLite();
@@ -60,6 +64,15 @@ class MyMap extends JPanel {
         
     }
 
+    public void add_object_rectangle(ObjectInformation objInfoRect) {
+        this.objectInfoInstance = objInfoRect;
+    }
+
+    public void onObjectClicked(DrawingCanvas canvas) {
+        if(canvas instanceof PlanetCanvas) {
+            objectInfoInstance.set_object(canvas);;
+        }
+    }
     //starts simulation by starting the timer
     public void start_simulation() {
         timer.start();

@@ -148,6 +148,8 @@ public class MyPanel extends JPanel {
         gbc.fill = GridBagConstraints.BOTH;//stretches in both directions
         eastPanel.add(objInfoRect, gbc);
 
+        map.add_object_rectangle(objInfoRect);
+
 
         //a jpanel to hold the buttons
         JPanel btnPanel = new JPanel(new GridLayout(4, 2));
