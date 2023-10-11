@@ -1,11 +1,11 @@
 /*
  * Name : Rennie Kipchirchir
  * Project: Spaceship Simulator
- * File: MyMap.java
+ * File: ObjectInformation.java
  * Date modified: 09/29/23
  * 
- * This file contains MyMap class. It is inform of a circle. The map contians
- * other items drawn in it. 
+ * This file contains ObjectInformation class that is responsible of 
+ * displaying object clicked information
  */
 
 
@@ -13,7 +13,7 @@ import java.awt.*;
 import javax.swing.*;
 
 
-//class that creates a circle drawing using the drawing canvas interface
+//class that creates a box drawing to display object information
 class ObjectBoxCanvas implements DrawingCanvas {
     /* draw 
      * parameters include a 2d graphics and dimesnions of drawing canvas
@@ -21,7 +21,7 @@ class ObjectBoxCanvas implements DrawingCanvas {
     */
     public void draw(Graphics2D g, Dimension canvasSize) {
 
-        //centers the circle in the drawing panel
+        //add padding to rectangle
         int length = canvasSize.width - Global.PADDING;
         int width = canvasSize.height - Global.PADDING;
         int x = 10;
@@ -42,10 +42,8 @@ class ObjectInformation extends JPanel {
         objRect = new ObjectBoxCanvas();
     }
 
-    /* PointerUpdateListener
-     * parameters include the pointer hand and the parent container i.e map
-     * returns nothing
-     * constructor for the class
+    /* 
+     * Paints the drawings initiated in the class
     */
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

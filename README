@@ -2,7 +2,7 @@
  - Name : Rennie Kipchirchir
  - Spaceship simulator project
  - File: README
- - Date modified: 09/29/23
+ - Date modified: 10/5/23
 -----------------------------------------------------------------------------
                         Project Description
 -----------------------------------------------------------------------------
@@ -35,28 +35,76 @@ and an alarm button if collission cannot be avoided/ potential impact.
 4. Lecture materials
 
 -----------------------------------------------------------------------------
-                        Correctly Implemented
+                      What program does so far
 -----------------------------------------------------------------------------
-I have implemented everything correctly to the best of my knowledge
+I have correctly implemented panels for drawing on my window. The Panels are
+able to resize with their drawings but there is a limit for minimzation
+to ensure every item remains visible. Maximization has no limit.
+
+I have also implemented the Start and end button. The start button starts the
+simulation while the end button ends the simulation. 
+The other buttons just show text when clicked. They have not yet been 
+implemented.
+
+I have added some drawings representing the objects I am going to have.
+There is a rectangle drawing which will be use to showcase object information
+There is a huge circle drawing representing the map, with the circumference
+of the circle representing the scope.
+
+The map has a pointer that rotates around it to simulate a radar's sweep hand.
+The radar will start sweeping when start is clicked and stop when end is 
+clicked.
+
+The map also has drawings of a spaceship, planet, and asteroid. The position
+of these objects update after a period of time. The positions are limited to 
+inside the map.
+
+The program correctly quits when the window is closed.
+
+-----------------------------------------------------------------------------
+                    Potential bug?
+-----------------------------------------------------------------------------
+
+I have this error on my IDE but all files compile well and program runs
+
+The error is : The type DrawingCanvas cannot be a superinterface of 
+            ObjectBoxCanvas; a superinterface must be an interface
+same error shows in MyMap file for the classes implementing the DrawingCanvas
+interface.
+
+The IDE I am using is: Vscode
 
 -----------------------------------------------------------------------------
                         Architecture
 -----------------------------------------------------------------------------
 
-Main class depends on MyFrame class to create the window frame
+Program is implemented using Java.swing interface
 
-MyFrame class depends on MyPanel class to create layout of the window frame.
-It also relies on JFrame to create the window frame.
+Main class creates the window frame by relying on JFrame
+
+Main calls the MyPanel class to create layout of the window frame. It relies
+JPanel
 
 MyPanel relies on:
-    DrawingCanvas class to draw the shapes as instructed by client
-    MyButton class to create buttons for the panel
-    JPanel to create a panel to store elements
+    JPanel to create the windows
+    MyMap to draw the map of one of the panels
+    ObjectInformation to  draw the rectangle to display object information
+    MyButton class to implement the button in the panels
+
+MyMap relies on:
+    Jpanel to create panels for drawing
+    DrawingCanvas to create drawings
+
+DrawingCanvas is a public interface used by both MyMap and ObjectInformation
+
+MyButton relies on JButton
+
 
 --------------------------------------------------------------------------
 
 
-How to compile: 
+How to run: 
 ---------------
 1. run javac *.java
 2. run java Main
+3. Click start button, bottom of window to begin simulation

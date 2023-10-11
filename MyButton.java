@@ -63,9 +63,6 @@ public class MyButton extends JButton implements ActionListener{
             case "Z(-)":
                 System.out.println("zoomout button was clicked");
                 break;
-            case ">>":
-                System.out.println("forward button was clicked");
-                break;
             case "<<":
                 System.out.println("rewind button was clicked");
                 break;
@@ -88,56 +85,11 @@ public class MyButton extends JButton implements ActionListener{
         this.setBorderPainted(true);//paint the border
     }
 
-    protected String get_button_name() {
+    /*a function that returns the name of the button
+     * No parameter
+     * returns button name. i.e returns start for start button
+     */
+    public String get_button_name() {
         return buttonName;
     }
-}
-
-//the start button is the button responsible for starting the simulation
-//it is a subclass of Mybutton
-class StartButton extends MyButton {
-
-    private MyMap myMap;
-
-    public StartButton(String label, MyMap map){
-        super(label);
-        this.myMap = map;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if(get_button_name().equals("START")) {
-            //start button should start the simulation
-            myMap.start_simulation();
-            //System.out.println("STAART button was clicked");
-
-        } else {
-            super.actionPerformed(e);
-        }
-    }
-
-}
-
-//the start button is the button responsible for starting the simulation
-//it is a subclass of Mybutton
-class EndButton extends MyButton {
-
-    private MyMap myMap;
-
-    public EndButton(String label, MyMap map){
-        super(label);
-        this.myMap = map;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if(get_button_name().equals("END")) {
-            //stop button should start the simulation
-            myMap.stop_simulation();
-
-        } else {
-            super.actionPerformed(e);
-        }
-    }
-
 }

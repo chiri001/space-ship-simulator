@@ -1,4 +1,13 @@
 
+/*
+ * Name : Rennie Kipchirchir
+ * Project: Spaceship Simulator
+ * File: DrawingCanvas.java
+ * Date modified: 10/06/23
+ * 
+ * This file contains DrawingCanvas interface. The interface facilitates 
+ * drawing of objects in the map.
+ */
 
 import java.awt.*;
 
