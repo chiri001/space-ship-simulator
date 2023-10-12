@@ -106,6 +106,6 @@ public class SpaceDebriCanvas implements DrawingCanvas {
     */
     public void updateLocation() {
         Random rand = new Random();
-        population = 30 + (100 - 30) * rand.nextDouble();
+        population = 10 + (40 - 10) * rand.nextDouble();
     }
 }

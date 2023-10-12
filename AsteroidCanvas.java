@@ -5,9 +5,14 @@ import java.awt.*;
 //asteroid class that draws an asteroid
 public class AsteroidCanvas implements DrawingCanvas {
 
-        private double xOffset = 1.5;
-        private double yOffset = 4.5;
+        private double xOffset;
+        private double yOffset;
         private String name = "Asteroid";
+
+        public AsteroidCanvas( double xOffset, double yOffset) {
+            this.xOffset = xOffset;
+            this.yOffset = yOffset;
+        }
 
         public void set_offset(double xOffset, double yOffset){
             this.xOffset = xOffset;
@@ -93,6 +98,6 @@ public class AsteroidCanvas implements DrawingCanvas {
     */
     public void updateLocation() {
 
-        yOffset -= 0.1;
+        yOffset -= 0.05;
     }
 }

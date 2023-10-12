@@ -42,9 +42,6 @@ public class MyButton extends JButton implements ActionListener{
             case "NEW PATH":
                 System.out.println("new path button was clicked");
                 break;
-            case "ALARM":
-                System.out.println("alarm button was clicked");
-                break;
             case "UP":
                 System.out.println("up button was clicked");
                 break;
@@ -62,9 +59,6 @@ public class MyButton extends JButton implements ActionListener{
                 break;
             case "Z(-)":
                 System.out.println("zoomout button was clicked");
-                break;
-            case "<<":
-                System.out.println("rewind button was clicked");
                 break;
         }
     }

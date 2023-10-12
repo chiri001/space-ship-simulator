@@ -114,6 +114,12 @@ public class MyPanel extends JPanel {
             btn.set_size(80, 60);
             panel.add(btn);
         } 
+        else if("ALARM".equals(btnTxt)) {
+            AlarmButton btn = new AlarmButton(btnTxt, map);
+            btn.set_btn_color(color);
+            btn.set_size(80, 60);
+            panel.add(btn);
+        } 
         else {
             //other buttons
             MyButton btn = new MyButton(btnTxt);
@@ -210,7 +216,7 @@ public class MyPanel extends JPanel {
             btn.set_btn_color(color); //set button color
             btn.set_size(60, 50);
             panel.add(btn, constraint); //add to panel and set constraint
-        }
+        } 
         else {
             //other buttons
             MyButton btn = new MyButton(btnTxt);

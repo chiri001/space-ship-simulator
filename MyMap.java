@@ -35,19 +35,20 @@ class MyMap extends JPanel implements ObjectListener {
 
     private ObjectInformation objectInfoInstance;
 
+    private int starting_speed = 200;
+
     public MyMap() {
         //create drawings
         this.circleCanvas = new CircleCanvas();
-        this.spaceShipCanvas = new SpaceShipCanvas(this);
+        this.spaceShipCanvas = new SpaceShipCanvas(this, 3, 3);
         this.addMouseListener(spaceShipCanvas);
-        this.mySpaceShip = new SpaceShipCanvas(this);
+        this.mySpaceShip = new MySpaceship(this);
         this.addMouseListener(mySpaceShip);
-        this.planetCanvas = new PlanetCanvas(this);
+        this.planetCanvas = new PlanetCanvas(this, 1.5, 4, 5);
         this.addMouseListener(planetCanvas);
         this.pointerCanvas = new PointerCanvas();
-        this.asteroidCanvas = new AsteroidCanvas();
+        this.asteroidCanvas = new AsteroidCanvas(2, 4.5);
         this.debriCanvas = new SpaceDebriCanvas();
-        this.sateLite = new SateLite();
 
 
 
@@ -56,13 +57,13 @@ class MyMap extends JPanel implements ObjectListener {
         timer = new Timer(50, 
                             new PointerListener(pointerCanvas, this));
 
-        asteroidTimer = new Timer(10000, 
+        asteroidTimer = new Timer(starting_speed, 
                                     new AsteroidListener(asteroidCanvas, this));
 
-        planetTimer = new Timer(50000, 
+        planetTimer = new Timer(2 * starting_speed, 
                                 new PlanetListener(planetCanvas, this));
 
-        shipTimer = new Timer(25000, 
+        shipTimer = new Timer(starting_speed / 2, 
                                 new ShipListener(spaceShipCanvas, this));
         
     }
@@ -92,15 +93,27 @@ class MyMap extends JPanel implements ObjectListener {
     }
 
     public void forward_simulation() {
-        asteroidTimer.setDelay(8000);
-        planetTimer.setDelay(48000);
-        shipTimer.setDelay(23000);
+        asteroidTimer.setDelay(2 * (starting_speed));
+        planetTimer.setDelay(2 * (2 * starting_speed));
+        shipTimer.setDelay(2 * (starting_speed /2));
+
+        repaint();
+
+        asteroidTimer.setDelay(starting_speed);
+        planetTimer.setDelay(2 * starting_speed);
+        shipTimer.setDelay(starting_speed /2);
     }
 
     public void rewind_simulation() {
         asteroidCanvas.rewind();
         planetCanvas.rewind();
         spaceShipCanvas.rewind();
+        repaint();
+    }
+
+    public void activate_alarm() {
+        circleCanvas.activate_alarm();
+        repaint();
     }
 
     /* Paintcomponent
@@ -127,13 +140,11 @@ class MyMap extends JPanel implements ObjectListener {
         mySpaceShip.draw(graphic_2d, getSize());
 
         //draw shapes using draw function in DrawingCanvas interface
-        spaceShipCanvas.set_offset(1.5, 3);
         spaceShipCanvas.draw(graphic_2d, getSize());
         planetCanvas.draw(graphic_2d, getSize());
         asteroidCanvas.draw(graphic_2d, getSize());
         pointerCanvas.draw(graphic_2d, getSize());
         debriCanvas.draw(graphic_2d, getSize());
-        sateLite.draw(graphic_2d, getSize());
 
         graphic_2d.setClip(oldClip);
     }

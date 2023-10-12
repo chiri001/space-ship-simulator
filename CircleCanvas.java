@@ -9,6 +9,7 @@ public class CircleCanvas implements DrawingCanvas {
     private int y;
     private double xOffset = 2;
     private double yOffset = 2;
+    private Color default_color = Color.GRAY;
 
     public void set_offset(double xOffset, double yOffset){
         this.xOffset = 2;
@@ -39,7 +40,13 @@ public class CircleCanvas implements DrawingCanvas {
         x = (int)((canvasSize.width - diameter) / xOffset);
         y = (int)((canvasSize.height - diameter) / yOffset);
 
+        g.setColor(default_color);
         g.drawOval(x, y, diameter, diameter);
+    }
+
+    public void activate_alarm(){
+        Color translucent_red = new Color(255, 0, 0, 128);
+        default_color = translucent_red;
     }
 
     public int[] get_map_info () {

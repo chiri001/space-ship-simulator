@@ -1,15 +1,30 @@
 
 import java.awt.*;
-import java.util.Random;
 
 
 //asteroid class that draws an asteroid
 public class SateLite implements DrawingCanvas {
 
-        private double xOffset = 1.5;
-        private double yOffset = 1.7;
+        private double xOffset;
+        private double yOffset;
         private String name = "satelite";
+        private int orbitRadius = 0;
+        private double angle = 0;
+        private int x = 0;
+        private int y = 0;
 
+        public SateLite(int orbitRadius) {
+            this.orbitRadius = orbitRadius;
+        }
+
+        public void set_centre(int orbitRadius, int x, int y) {
+            this.orbitRadius = orbitRadius;
+            this.x = x;
+            this.y = y;
+        }
+        public void set_angle(double angle) {
+            this.angle = angle;
+        }
 
         public void set_offset(double xOffset, double yOffset){
             this.xOffset = xOffset;
@@ -37,8 +52,8 @@ public class SateLite implements DrawingCanvas {
             int baseSize = Math.min(canvasSize.width, canvasSize.height);
             int diameter = baseSize / (int)(4 * Global.SCALE); // Satellite body diameter
     
-            int centerX = (int) (canvasSize.width / xOffset);
-            int centerY = (int) (canvasSize.height / yOffset);
+            int centerX = x + 2 * (int) (orbitRadius * Math.cos(angle));
+            int centerY = y + 2 * (int) (orbitRadius * Math.sin(angle));
     
             // Drawing the satellite main body
             g.setColor(new Color(40, 40, 40));
@@ -76,13 +91,9 @@ public class SateLite implements DrawingCanvas {
      * updates location of the planet on the map
     */
     public void updateLocation() {
-        Random rand = new Random();
-
-        double minX = 1.5;
-        double maxX = 4.5;
-
-        //limit values to be betwen minX and maxX
-        xOffset =  minX + (maxX - minX) * rand.nextDouble();
-        yOffset =  minX + (maxX - minX) * rand.nextDouble();
+        angle += 0.05;
+        if(angle > 2 * Math.PI){
+            angle -= 2 * Math.PI;
+        }
     }
 }

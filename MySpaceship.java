@@ -1,22 +1,20 @@
 
 
 import java.awt.*;
-import java.awt.event.MouseListener;
 
 import java.awt.event.MouseEvent;
 
 //SpaceShipCanvas Class that draws a spaceship
-public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
+public class MySpaceship extends SpaceShipCanvas implements DrawingCanvas{
+
 
     private double xOffset;
     private double yOffset;
-    private String name = "Spaceship";
+    private String name = "Benatar";
     private ObjectListener lstn;
 
-    public SpaceShipCanvas(ObjectListener lstn, double xOffset, double yOffset) {
-        this.lstn = lstn;
-        this.xOffset = xOffset;
-        this.yOffset = yOffset;
+    public MySpaceship(ObjectListener lstn) {
+        super(lstn, 2, 2);
     }
 
     public double get_xOffset(){
@@ -33,8 +31,8 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
     }
 
     public void set_offset(double xOffset, double yOffset){
-        this.xOffset = xOffset;
-        this.yOffset = yOffset;
+        this.xOffset = 2;
+        this.yOffset = 2;
     }
     /* draw 
      * parameters include a 2d graphics and dimesnions of drawing canvas
@@ -88,18 +86,15 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
         FontMetrics fm = g.getFontMetrics();
         int textWidth = fm.stringWidth(name);
         int textX = centerY - spaceshipLength / x_divisor - textWidth/6; //put text center
-        int textY =  centerX - spaceshipHeight / x_divisor + (int) ( 1.8 * fm.getHeight()); //put text below drawing
+        int textY =  centerX - spaceshipHeight / x_divisor + (int) ( 1.5 * fm.getHeight()); //put text below drawing
         Name drName = new Name(textX, textY, name, 10);
         drName.draw(g);
     }
 
-    public void updateLocation() {
-        yOffset -= 0.02;
-    }
 
     //updates location of planet on map when called
     public void rewind() {
-            yOffset -= 0.08;
+            yOffset += 0.08;
     }
 
     public void mouseClicked(MouseEvent e) {
@@ -122,3 +117,4 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
     public void mouseExited(MouseEvent e) {
     }
 }
+
