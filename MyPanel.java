@@ -205,11 +205,11 @@ public class MyPanel extends JPanel {
             btn.set_btn_color(color); //set button color
             btn.set_size(60, 50);
             panel.add(btn, constraint); //add to panel and set constraint
-        // } else if("<<".equals(btnTxt)) {
-        //     ForwardButton btn = new RewindButton(btnTxt, map);
-        //     btn.set_btn_color(color); //set button color
-        //     btn.set_size(60, 50);
-        //     panel.add(btn, constraint); //add to panel and set constraint
+        } else if("<<".equals(btnTxt)) {
+            RewindButton btn = new RewindButton(btnTxt, map);
+            btn.set_btn_color(color); //set button color
+            btn.set_size(60, 50);
+            panel.add(btn, constraint); //add to panel and set constraint
         }
         else {
             //other buttons

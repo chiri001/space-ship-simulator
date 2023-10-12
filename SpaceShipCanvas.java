@@ -1,13 +1,39 @@
 
 
 import java.awt.*;
-import java.util.Random;
+import java.awt.event.MouseListener;
+
+import java.awt.event.MouseEvent;
 
 //SpaceShipCanvas Class that draws a spaceship
-public class SpaceShipCanvas implements DrawingCanvas {
+public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
 
     private double xOffset = 3;
     private double yOffset = 3;
+    private String name = "SpaceShip";
+    private ObjectListener lstn;
+
+    public SpaceShipCanvas(ObjectListener lstn) {
+        this.lstn = lstn;
+    }
+
+    public double get_xOffset(){
+        return this.xOffset;
+    }
+    public double get_yOffset(){
+        return this.yOffset;
+    }
+    public String get_name(){
+        return name;
+    }
+    public double get_speed(){
+        return yOffset;
+    }
+
+    public void set_offset(double xOffset, double yOffset){
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
+    }
     /* draw 
      * parameters include a 2d graphics and dimesnions of drawing canvas
      * returns nothing
@@ -56,18 +82,40 @@ public class SpaceShipCanvas implements DrawingCanvas {
 
         g.fillPolygon(xPoints, yPoints, 7);
 
-        String name = "SpaceShip";
         FontMetrics fm = g.getFontMetrics();
         int textWidth = fm.stringWidth(name);
         int textX = centerY - spaceshipLength / x_divisor - textWidth/6; //put text center
         int textY =  centerX - spaceshipHeight / x_divisor + (int) (1.5 * fm.getHeight()); //put text below drawing
         Name drName = new Name(textX, textY, name, 10);
         drName.draw(g);
-
-
     }
 
     public void updateLocation() {
         yOffset -= 0.08;
+    }
+
+    //updates location of planet on map when called
+    public void rewind() {
+            yOffset += 0.08;
+    }
+
+    public void mouseClicked(MouseEvent e) {
+        ScreenPosition obj = new ScreenPosition();
+        Color clickedObj = obj.getPixelColor(e.getXOnScreen(), e.getYOnScreen());
+
+        if(clickedObj.equals(Color.black)) {
+            if(lstn != null){
+                lstn.onObjectClicked(this);
+            }
+        }
+    }
+
+    public void mousePressed(MouseEvent e) {
+    }
+    public void mouseReleased(MouseEvent e) {
+    }
+    public void mouseEntered(MouseEvent e) {
+    }
+    public void mouseExited(MouseEvent e) {
     }
 }

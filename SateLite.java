@@ -8,7 +8,26 @@ public class SateLite implements DrawingCanvas {
 
         private double xOffset = 1.5;
         private double yOffset = 1.7;
-    
+        private String name = "satelite";
+
+
+        public void set_offset(double xOffset, double yOffset){
+            this.xOffset = xOffset;
+            this.yOffset = yOffset;
+        }
+        public double get_xOffset(){
+            return this.xOffset;
+        }
+        public double get_yOffset(){
+            return this.yOffset;
+        }
+        public String get_name(){
+            return name;
+        }
+        public double get_speed(){
+            return yOffset;
+        }
+
         /* draw 
          * parameters include a 2d graphics and dimensions of drawing canvas
          * returns nothing
@@ -39,6 +58,14 @@ public class SateLite implements DrawingCanvas {
             g.setStroke(new BasicStroke(2));
             int antennaLength = diameter / 3;
             g.drawLine(centerX, centerY - diameter/2, centerX, centerY - diameter/2 - antennaLength);
+
+
+            FontMetrics fm = g.getFontMetrics();
+            int textWidth = fm.stringWidth(name);
+            int textX = centerX + textWidth/3; //put text center
+            int textY = centerY; //put text below drawing
+            Name drName = new Name(textX, textY, name, 10);
+            drName.draw(g);
 
         }
 

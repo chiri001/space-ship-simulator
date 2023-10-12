@@ -16,7 +16,6 @@ public class ForwardButton extends MyButton {
     public void actionPerformed(ActionEvent e) {
         if(get_button_name().equals(">>")) {
             //start button should start the simulation
-            System.out.println("Hey I am clicked");
             myMap.forward_simulation();
 
         } else {

@@ -8,6 +8,9 @@ import java.util.Random;
 public class SpaceDebriCanvas implements DrawingCanvas {
 
     private double population = 20;
+    private String name = "debri";
+    private double xOffset;
+    private double yOffset;
 
     private ArrayList<SpaceDebri> debriList = new ArrayList<>();
 
@@ -15,6 +18,23 @@ public class SpaceDebriCanvas implements DrawingCanvas {
         for(int i = 0; i < population; i++) {
             debriList.add(new SpaceDebri(Math.random() * 3 + 1.5, Math.random() * 3 + 1.5));
         }
+    }
+
+    public void set_offset(double xOffset, double yOffset){
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
+    }
+    public double get_xOffset(){
+        return this.xOffset;
+    }
+    public double get_yOffset(){
+        return this.yOffset;
+    }
+    public String get_name(){
+        return name;
+    }
+    public double get_speed(){
+        return yOffset;
     }
 
     public void draw(Graphics2D g, Dimension canvasSize) {
@@ -68,6 +88,13 @@ public class SpaceDebriCanvas implements DrawingCanvas {
         g.setColor(Color.gray);
         
         g.fillPolygon(xPoints, yPoints, numSides);
+
+        FontMetrics fm = g.getFontMetrics();
+        int textWidth = fm.stringWidth(name);
+        int textX = centerX - textWidth / 2;
+        int textY = centerY + asteroidSize/2 + fm.getHeight();
+        Name drName = new Name(textX, textY, name, 2);
+        drName.draw(g);
 
     }
 

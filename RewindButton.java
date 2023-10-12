@@ -14,9 +14,9 @@ public class RewindButton extends MyButton {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(get_button_name().equals("START")) {
+        if(get_button_name().equals("<<")) {
             //start button should start the simulation
-            //myMap.rewind_simulation();
+            myMap.rewind_simulation();
 
         } else {
             super.actionPerformed(e);

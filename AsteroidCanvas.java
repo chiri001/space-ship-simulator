@@ -1,6 +1,5 @@
 
 import java.awt.*;
-import java.util.Random;
 
 
 //asteroid class that draws an asteroid
@@ -8,6 +7,29 @@ public class AsteroidCanvas implements DrawingCanvas {
 
         private double xOffset = 1.5;
         private double yOffset = 4.5;
+        private String name = "Asteroid";
+
+        public void set_offset(double xOffset, double yOffset){
+            this.xOffset = xOffset;
+            this.yOffset = yOffset;
+        }
+        public double get_xOffset(){
+            return this.xOffset;
+        }
+        public double get_yOffset(){
+            return this.yOffset;
+        }
+        public String get_name(){
+            return name;
+        }
+        public double get_speed(){
+            return yOffset;
+        }
+
+        //updates location of planet on map when called
+        public void rewind() {
+            yOffset += 0.08;
+        }
     
         /* draw 
          * parameters include a 2d graphics and dimensions of drawing canvas
@@ -55,7 +77,6 @@ public class AsteroidCanvas implements DrawingCanvas {
             g.setColor(new Color(65, 30, 3));
             g.fillPolygon(xPoints, yPoints, numSides);
 
-            String name = "asteroid";
             FontMetrics fm = g.getFontMetrics();
             int textWidth = fm.stringWidth(name);
             int textX = centerX - textWidth / 2;

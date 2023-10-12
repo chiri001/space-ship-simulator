@@ -19,7 +19,27 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
         this.lstn = lstn;
     }
 
-    
+    public void set_offset(double xOffset, double yOffset) {
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
+    }
+
+    public double get_xOffset(){
+        return this.xOffset;
+    }
+
+    public double get_yOffset(){
+        return this.yOffset;
+    }
+
+    public String get_name(){
+        return this.name;
+    }
+
+    public double get_speed(){
+        return this.yOffset;
+    }
+
     /* draw 
      * parameters include a 2d graphics and dimesnions of drawing canvas
      * returns nothing
@@ -49,11 +69,15 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
         yOffset -= 0.05;
     }
 
+    //updates location of planet on map when called
+    public void rewind() {
+        yOffset += 0.05;
+    }
+
     public void mouseClicked(MouseEvent e) {
         Rectangle2D planetBounds = new Rectangle2D.Double(x, y, diameter, diameter);
         if(planetBounds.contains(e.getPoint())) {
             //System.out.println("Planet Clicked");
-            //map.handle_click_event()
             if(lstn != null){
                 lstn.onObjectClicked(this);
             }

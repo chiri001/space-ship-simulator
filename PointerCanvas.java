@@ -5,6 +5,25 @@ import java.awt.*;
 class PointerCanvas implements DrawingCanvas {
 
     private double pointerAngle = 0; //variable to track angle of rotation
+    private double xOffset = 2;
+    private double yOffset = 2;
+
+    public void set_offset(double xOffset, double yOffset){
+        this.xOffset = 2;
+        this.yOffset = 2;
+    }
+    public double get_xOffset(){
+        return this.xOffset;
+    }
+    public double get_yOffset(){
+        return this.yOffset;
+    }
+    public String get_name(){
+        return "";
+    }
+    public double get_speed(){
+        return yOffset;
+    }
 
     /* draw 
      * parameters include a 2d graphics and dimesnions of drawing canvas
