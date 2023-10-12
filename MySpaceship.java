@@ -5,13 +5,15 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 //SpaceShipCanvas Class that draws a spaceship
-public class MySpaceship extends SpaceShipCanvas implements DrawingCanvas{
+public class MySpaceship extends SpaceShipCanvas{
 
 
     private double xOffset;
     private double yOffset;
     private String name = "Benatar";
     private ObjectListener lstn;
+    private Color default_color = Color.BLACK;
+    private boolean isAlarmActivated = false;
 
     public MySpaceship(ObjectListener lstn) {
         super(lstn, 2, 2);
@@ -80,7 +82,7 @@ public class MySpaceship extends SpaceShipCanvas implements DrawingCanvas{
             centerY - spaceshipLength / 6 //bottom of left side
         };
 
-        g.setColor(Color.black);
+        g.setColor(default_color);
         g.fillPolygon(xPoints, yPoints, 7);
 
         FontMetrics fm = g.getFontMetrics();
@@ -95,6 +97,21 @@ public class MySpaceship extends SpaceShipCanvas implements DrawingCanvas{
     //updates location of planet on map when called
     public void rewind() {
             yOffset += 0.08;
+    }
+
+    public void activate_alarm(){
+        if(!isAlarmActivated){
+            Color translucent_red = new Color(255, 0, 0, 128);
+            default_color = translucent_red;
+            isAlarmActivated = true;
+        } else {
+            reset_color();
+            isAlarmActivated = false;
+        }
+    }
+
+    public void reset_color(){
+        default_color = Color.black;
     }
 
     public void mouseClicked(MouseEvent e) {

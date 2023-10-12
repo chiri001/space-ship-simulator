@@ -22,8 +22,7 @@ class MyMap extends JPanel implements ObjectListener {
     private PointerCanvas pointerCanvas; //pointer hand drawing class
     private AsteroidCanvas asteroidCanvas;
     private SpaceDebriCanvas debriCanvas;
-    private SateLite sateLite;
-    private SpaceShipCanvas mySpaceShip;
+    private MySpaceship mySpaceShip;
 
 
     //timer variables
@@ -93,18 +92,19 @@ class MyMap extends JPanel implements ObjectListener {
     }
 
     public void forward_simulation() {
-        asteroidTimer.setDelay(2 * (starting_speed));
-        planetTimer.setDelay(2 * (2 * starting_speed));
-        shipTimer.setDelay(2 * (starting_speed /2));
+        asteroidTimer.setDelay((starting_speed) / 2);
+        planetTimer.setDelay((2 * starting_speed) / 2);
+        shipTimer.setDelay((starting_speed /2) / 2);
 
         repaint();
-
-        asteroidTimer.setDelay(starting_speed);
-        planetTimer.setDelay(2 * starting_speed);
-        shipTimer.setDelay(starting_speed /2);
     }
 
     public void rewind_simulation() {
+        /*resets forward to default values */
+        asteroidTimer.setDelay(starting_speed);
+        planetTimer.setDelay(2 * starting_speed);
+        shipTimer.setDelay(starting_speed /2);
+
         asteroidCanvas.rewind();
         planetCanvas.rewind();
         spaceShipCanvas.rewind();
@@ -112,7 +112,9 @@ class MyMap extends JPanel implements ObjectListener {
     }
 
     public void activate_alarm() {
-        circleCanvas.activate_alarm();
+        Timer sound_alarm = new Timer(500, 
+                            new MySpaceshipListener(mySpaceShip, this));
+        sound_alarm.start();
         repaint();
     }
 
@@ -147,16 +149,5 @@ class MyMap extends JPanel implements ObjectListener {
         debriCanvas.draw(graphic_2d, getSize());
 
         graphic_2d.setClip(oldClip);
-    }
-
-    private double offset_generator() {
-    
-        Random rand = new Random();
-        double minX = 1.5;
-        double maxX = 4.5;
-
-        double offset = minX + (maxX - minX) * rand.nextDouble();
-
-        return offset;
     }
 }

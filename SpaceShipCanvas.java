@@ -99,7 +99,7 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
 
     //updates location of planet on map when called
     public void rewind() {
-            yOffset -= 0.08;
+            yOffset += 0.08;
     }
 
     public void mouseClicked(MouseEvent e) {

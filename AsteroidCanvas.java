@@ -1,6 +1,14 @@
 
-import java.awt.*;
+/*
+ * Name : Rennie Kipchirchir
+ * Project: Spaceship Simulator
+ * File: AsteroidCanvas.java
+ * Date modified: 10/05/23
+ * 
+ * The file handles drawing of the asteroids for program
+ */
 
+import java.awt.*;
 
 //asteroid class that draws an asteroid
 public class AsteroidCanvas implements DrawingCanvas {
@@ -9,18 +17,25 @@ public class AsteroidCanvas implements DrawingCanvas {
         private double yOffset;
         private String name = "Asteroid";
 
+        //constructor
+        //takes x and y offset values
         public AsteroidCanvas( double xOffset, double yOffset) {
             this.xOffset = xOffset;
             this.yOffset = yOffset;
         }
 
+        //setter function that sets x and y offsets
         public void set_offset(double xOffset, double yOffset){
             this.xOffset = xOffset;
             this.yOffset = yOffset;
         }
+
+        //returns the xOffset
         public double get_xOffset(){
             return this.xOffset;
         }
+
+        //returns the y Offset
         public double get_yOffset(){
             return this.yOffset;
         }
