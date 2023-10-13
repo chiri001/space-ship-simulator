@@ -7,6 +7,7 @@ class PointerCanvas implements DrawingCanvas {
     private double pointerAngle = 0; //variable to track angle of rotation
     private double xOffset = 2;
     private double yOffset = 2;
+    private int padding = 15;
 
     public void set_offset(double xOffset, double yOffset){
     }
@@ -30,7 +31,7 @@ class PointerCanvas implements DrawingCanvas {
     public void draw(Graphics2D g, Dimension canvasSize) {
 
         //x and y coordinates and diameterof the circle map
-        int diameter = Math.min(canvasSize.width, canvasSize.height) - Global.PADDING;
+        int diameter = Math.min(canvasSize.width, canvasSize.height) - padding;
         int x = (canvasSize.width - diameter) / 2;
         int y = (canvasSize.height - diameter) / 2;
         

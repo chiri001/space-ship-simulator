@@ -99,8 +99,8 @@ public class AsteroidCanvas implements DrawingCanvas {
             for (int i = 0; i < numSides; i++) {
                 double angle = theta * i; //angle for each side
                 
-                //using the formula r * cos(angle) to find x coordinate
-                //then adding the center coordinate
+                //using the formula r * cos(angle) to find coordinate
+                //then adding the center coordinate for displacement
                 xPoints[i] = centerX + (int)(Math.cos(angle) * (asteroidSize - offsets[i]));
                 yPoints[i] = centerY + (int)(Math.sin(angle) * (asteroidSize - offsets[i]));
             }

@@ -2,7 +2,7 @@
  - Name : Rennie Kipchirchir
  - Spaceship simulator project
  - File: README
- - Date modified: 10/5/23
+ - Date modified: 10/13/23
 -----------------------------------------------------------------------------
                         Project Description
 -----------------------------------------------------------------------------
@@ -37,6 +37,26 @@ and an alarm button if collission cannot be avoided/ potential impact.
 -----------------------------------------------------------------------------
                       What program does so far
 -----------------------------------------------------------------------------
+
+                    Week 4 :
+----------------------------------------
+I have implemented all the drawings required for the map : planet, spaceship,
+spacedebri, satelites
+
+I have updated this buttons to execute their tasks: Alarm, forward, rewind
+
+I have simulated movement on the program. Works by moving all items along the
+y axis except from the central spaceship. The central spaceship acts as the 
+spaceship to be controlled.
+
+I am yet to implement movement for spacedebri.
+
+Vehicle class: SpaceShipCanvas
+Model class: MyMap
+Public Interface: DrawingCanvas
+
+                    Week 3 :
+----------------------------------------
 I have correctly implemented panels for drawing on my window. The Panels are
 able to resize with their drawings but there is a limit for minimzation
 to ensure every item remains visible. Maximization has no limit.
@@ -65,14 +85,7 @@ The program correctly quits when the window is closed.
                     Potential bug?
 -----------------------------------------------------------------------------
 
-I have this error on my IDE but all files compile well and program runs
-
-The error is : The type DrawingCanvas cannot be a superinterface of 
-            ObjectBoxCanvas; a superinterface must be an interface
-same error shows in MyMap file for the classes implementing the DrawingCanvas
-interface.
-
-The IDE I am using is: Vscode
+No any outstanding bug
 
 -----------------------------------------------------------------------------
                         Architecture
@@ -80,25 +93,86 @@ The IDE I am using is: Vscode
 
 Program is implemented using Java.swing interface
 
-Main class creates the window frame by relying on JFrame
+Interfaces:
+---------------------------------------------------------------------
+|-- represents classes implementing the interface
 
-Main calls the MyPanel class to create layout of the window frame. It relies
+DrawingCanvas
+    |--SpaceShipCanvas
+    |--AsteroidCanvas
+    |--SateLite
+    |--PlanetCanvas
+    |--SpaceDebriCanvas
+
+ObjectListener
+    |--MyMap
+
+--------------------------------------------------------------------------
+
+Inheritance Hierachy :
+-----------------------
+
+|-- represents the subclasses of a given  class
+
+JButton
+    |--MyButton
+        |--StartButton
+        |--EndButton
+        |--RewindButton
+        |--ForwardButton
+        |--AlarmButton
+
+SpaceShipCanvas
+    |--MySpaceship
+
 JPanel
+    |--MyPanel
+    |--MyMap
+    |--ObjectInformation 
 
-MyPanel relies on:
-    JPanel to create the windows
-    MyMap to draw the map of one of the panels
-    ObjectInformation to  draw the rectangle to display object information
-    MyButton class to implement the button in the panels
 
-MyMap relies on:
-    Jpanel to create panels for drawing
-    DrawingCanvas to create drawings
+-----------------------------------------------------------------------
 
-DrawingCanvas is a public interface used by both MyMap and ObjectInformation
+Aggregation Hierachy :
+-----------------------
+|-- represents classes relied on by the class to complete the class task
+*-- represents public interface used by the class
 
-MyButton relies on JButton
+Main
+|-- JFrame
+|-- MyPanel
+    |-- JPanel
+    |-- MyMap
+        |-- JPanel
+        |-- SpaceShipCanvas
+            *-- DrawingCanvas
+        |-- SpaceshipListener
+        |-- MySpaceship
+            *-- DrawingCanvas
+        |-- MySpaceshipListener
+        |-- AteroidCanvas
+            *-- DrawingCanvas
+        |-- AstoroidListener
+        |-- PlanetCanvas
+            *-- DrawingCanvas
+            |-- SateLite
+                *-- DrawingCanvas
+        |-- PlanetListener
+        |-- SpaceDebriCanvas
+            *-- DrawingCanvas
+        *--ObjectListener
 
+    |--ObjectInformation
+        |--ObjectBox
+            *-- DrawingCanvas
+    
+    |--MyButton
+        |--JButton
+        |--StartButton
+        |--EndButton
+        |--RewindButton
+        |--ForwardButton
+        |--AlarmButton
 
 --------------------------------------------------------------------------
 

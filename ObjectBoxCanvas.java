@@ -77,8 +77,8 @@ public class ObjectBoxCanvas implements DrawingCanvas {
     public void draw(Graphics2D g, Dimension canvasSize) {
 
         //add padding to rectangle
-        int length = canvasSize.width - Global.PADDING;
-        int width = canvasSize.height - Global.PADDING;
+        int length = canvasSize.width - padding;
+        int width = canvasSize.height - padding;
         int x = 10;
         int y = 10;
 
