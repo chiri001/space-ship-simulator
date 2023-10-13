@@ -16,6 +16,8 @@ public class AsteroidCanvas implements DrawingCanvas {
         private double xOffset;
         private double yOffset;
         private String name = "Asteroid";
+        private double speed = 0.05;
+        private int scale = 15;
 
         //constructor
         //takes x and y offset values
@@ -39,16 +41,20 @@ public class AsteroidCanvas implements DrawingCanvas {
         public double get_yOffset(){
             return this.yOffset;
         }
+
+        //returns the name of object
         public String get_name(){
             return name;
         }
+
+        //returns the speed of object
         public double get_speed(){
-            return yOffset;
+            return speed;
         }
 
-        //updates location of planet on map when called
+        //rewinds the asteroid back 2 times the speed
         public void rewind() {
-            yOffset += 0.08;
+            yOffset += (2 * speed);
         }
     
         /* draw 
@@ -57,19 +63,22 @@ public class AsteroidCanvas implements DrawingCanvas {
         */
         public void draw(Graphics2D g, Dimension canvasSize) {
             
+            //calculating the base size of asteroid from canvasSize and to scale
             int baseSize = Math.min(canvasSize.width, canvasSize.height);
-            int asteroidSize = baseSize /(int) (2 * Global.SCALE); 
+            int asteroidSize = baseSize /(int) (2 * scale); 
     
+            //positioning on map based on given offset values
             int centerX = (int) (canvasSize.width / xOffset);
             int centerY = (int) (canvasSize.height / yOffset);
 
             int numSides = 13;
-            double angleIncrement = 2 * Math.PI / numSides;
+            double theta = 2 * Math.PI / numSides; //getting equal angles/side
 
+            //array to store c and y coordinates
             int[] xPoints = new int[numSides];
             int[] yPoints = new int[numSides];
 
-            // Define static offsets for each point to keep the shape consistent
+            // static offsets for each point to keep the shape consistent
             int[] offsets = {
                 (int)(0.1 * asteroidSize),
                 (int)(0.15 * asteroidSize),
@@ -86,17 +95,21 @@ public class AsteroidCanvas implements DrawingCanvas {
                 (int)(0.14 * asteroidSize)
             };
 
+            //finding the x and y positions
             for (int i = 0; i < numSides; i++) {
-                double angle = angleIncrement * i;
+                double angle = theta * i; //angle for each side
                 
+                //using the formula r * cos(angle) to find x coordinate
+                //then adding the center coordinate
                 xPoints[i] = centerX + (int)(Math.cos(angle) * (asteroidSize - offsets[i]));
                 yPoints[i] = centerY + (int)(Math.sin(angle) * (asteroidSize - offsets[i]));
             }
 
-    
+
             g.setColor(new Color(65, 30, 3));
             g.fillPolygon(xPoints, yPoints, numSides);
 
+            //adding name to drawing ---> depends on Name class
             FontMetrics fm = g.getFontMetrics();
             int textWidth = fm.stringWidth(name);
             int textX = centerX - textWidth / 2;
@@ -113,6 +126,6 @@ public class AsteroidCanvas implements DrawingCanvas {
     */
     public void updateLocation() {
 
-        yOffset -= 0.05;
+        yOffset -= speed;
     }
 }

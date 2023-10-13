@@ -1,5 +1,11 @@
-//the start button is the button responsible for starting the simulation
-//it is a subclass of Mybutton
+/*
+ * Name : Rennie Kipchirchir
+ * Project: Spaceship Simulator
+ * File: StartButton.java
+ * Date modified: 10/12/23
+ * 
+ * This file is responsible for handling when start button is clieked
+ */
 
 import java.awt.event.ActionEvent;
 

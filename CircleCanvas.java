@@ -1,4 +1,13 @@
 
+/*
+ * Name : Rennie Kipchirchir
+ * Project: Spaceship Simulator
+ * File: CircleCanvas.java
+ * Date modified: 10/05/23
+ * 
+ * The file handles the drawing for the map
+ */
+
 import java.awt.*;
 
 //class that creates a circle drawing using the drawing canvas interface
@@ -9,10 +18,9 @@ public class CircleCanvas implements DrawingCanvas {
     private int y;
     private double xOffset = 2;
     private double yOffset = 2;
+    private int padding = 15;
 
     public void set_offset(double xOffset, double yOffset){
-        this.xOffset = 2;
-        this.yOffset = 2;
     }
     public double get_xOffset(){
         return this.xOffset;
@@ -33,7 +41,7 @@ public class CircleCanvas implements DrawingCanvas {
     */
     public void draw(Graphics2D g, Dimension canvasSize) {
         //add padding from edge of container
-        diameter = Math.min(canvasSize.width, canvasSize.height) - Global.PADDING;
+        diameter = Math.min(canvasSize.width, canvasSize.height) - padding;
 
         //centers the circle in the drawing panel
         x = (int)((canvasSize.width - diameter) / xOffset);
@@ -43,10 +51,9 @@ public class CircleCanvas implements DrawingCanvas {
         g.drawOval(x, y, diameter, diameter);
     }
 
-
-
+    //get the x,y coordinate of the map and tne diameter information
     public int[] get_map_info () {
-        int map_info[] = {x, y, diameter};
+        int map_info[] = {x, y, diameter}; //store details in array to return
 
         return map_info;
     }

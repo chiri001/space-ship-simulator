@@ -1,88 +1,108 @@
+/*
+ * Name : Rennie Kipchirchir
+ * Project: Spaceship Simulator
+ * File: SateLite.java
+ * Date modified: 10/12/23
+ * 
+ * This file contains Satelite drawing class
+ */
 
 import java.awt.*;
 
-
-//asteroid class that draws an asteroid
+//Satelite class that draws an satelite
 public class SateLite implements DrawingCanvas {
 
-        private double xOffset;
-        private double yOffset;
-        private String name = "satelite";
-        private int orbitRadius = 0;
-        private double angle = 0;
-        private int x = 0;
-        private int y = 0;
+    private double xOffset;
+    private double yOffset;
+    private String name = "satelite";
+    private int orbitRadius = 0;
+    private double angle = 0;
+    private int x = 0;
+    private int y = 0;
+    private double speed = 0.05;
+    private int scale = 15;
 
-        public SateLite(int orbitRadius) {
-            this.orbitRadius = orbitRadius;
-        }
+    public SateLite(int orbitRadius) {
+        this.orbitRadius = orbitRadius;
+    }
 
-        public void set_centre(int orbitRadius, int x, int y) {
-            this.orbitRadius = orbitRadius;
-            this.x = x;
-            this.y = y;
-        }
-        public void set_angle(double angle) {
-            this.angle = angle;
-        }
+    public void set_centre(int orbitRadius, int x, int y) {
+        this.orbitRadius = orbitRadius;
+        this.x = x;
+        this.y = y;
+    }
+    public void set_angle(double angle) {
+        this.angle = angle;
+    }
 
-        public void set_offset(double xOffset, double yOffset){
-            this.xOffset = xOffset;
-            this.yOffset = yOffset;
-        }
-        public double get_xOffset(){
-            return this.xOffset;
-        }
-        public double get_yOffset(){
-            return this.yOffset;
-        }
-        public String get_name(){
-            return name;
-        }
-        public double get_speed(){
-            return yOffset;
-        }
+    public void set_offset(double xOffset, double yOffset){
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
+    }
+    public double get_xOffset(){
+        return this.xOffset;
+    }
+    public double get_yOffset(){
+        return this.yOffset;
+    }
+    public String get_name(){
+        return name;
+    }
+    public double get_speed(){
+        return speed;
+    }
 
-        /* draw 
-         * parameters include a 2d graphics and dimensions of drawing canvas
-         * returns nothing
-        */
-        public void draw(Graphics2D g, Dimension canvasSize) {
-            
-            int baseSize = Math.min(canvasSize.width, canvasSize.height);
-            int diameter = baseSize / (int)(4 * Global.SCALE); // Satellite body diameter
-    
-            int centerX = x + 2 * (int) (orbitRadius * Math.cos(angle));
-            int centerY = y + 2 * (int) (orbitRadius * Math.sin(angle));
-    
-            // Drawing the satellite main body
-            g.setColor(new Color(40, 40, 40));
-            g.fillOval(centerX - diameter/2, centerY - diameter/2, diameter, diameter);
-    
-            // Solar panel dimensions
-            int panelWidth = diameter / 3;
-            int panelHeight = diameter;
-    
-            // Drawing the solar panels
-            g.setColor(Color.BLUE);
-            g.fillRect(centerX - diameter/2 - panelWidth, centerY - panelHeight/2, panelWidth, panelHeight); // Left panel
-            g.fillRect(centerX + diameter/2, centerY - panelHeight/2, panelWidth, panelHeight); // Right panel
-    
-            // Drawing the antenna
-            g.setColor(Color.RED);
-            g.setStroke(new BasicStroke(2));
-            int antennaLength = diameter / 3;
-            g.drawLine(centerX, centerY - diameter/2, centerX, centerY - diameter/2 - antennaLength);
+    /* draw 
+        * parameters include a 2d graphics and dimensions of drawing canvas
+        * returns nothing
+    */
+    public void draw(Graphics2D g, Dimension canvasSize) {
+        
+        int baseSize = Math.min(canvasSize.width, canvasSize.height);
+        int diameter = baseSize / (int)(4 * scale); // Satellite body diameter
 
+        //finds the x and y coordinates of satelite while in orbit
+        //x and y are is the orbits center/ planet center
+        int centerX = x + (int) (orbitRadius * Math.cos(angle));
+        int centerY = y + (int) (orbitRadius * Math.sin(angle));
 
-            FontMetrics fm = g.getFontMetrics();
-            int textWidth = fm.stringWidth(name);
-            int textX = centerX + textWidth/3; //put text center
-            int textY = centerY; //put text below drawing
-            Name drName = new Name(textX, textY, name, 10);
-            drName.draw(g);
+        // Drawing the satellite main body
+        g.setColor(new Color(40, 40, 40)); //color dark Grey
 
-        }
+        //subtractring radius from new x and y coordinate of satelite to 
+        //find where to position satelite on map
+        int body_x = centerX - diameter/2;
+        int body_y = centerY - diameter/2;
+        g.fillOval(body_x, body_y, diameter, diameter);
+
+        // Solar panel dimensions
+        int panelWidth = diameter / 3; //width of panel is smaller
+        int panelHeight = diameter;
+
+        // Drawing the solar panels
+        g.setColor(Color.BLUE);
+        int panel_x = body_x - panelWidth; //positions it after body
+        int panel_y = centerY - panelHeight/2; //same height as body(panelHeight == diameter)
+        g.fillRect(panel_x, panel_y, panelWidth, panelHeight); // Left panel
+        g.fillRect(centerX + diameter/2, panel_y, panelWidth, panelHeight); // Right panel
+
+        // Drawing the antenna
+        g.setColor(Color.RED);
+        g.setStroke(new BasicStroke(2));
+        int antennaLength = diameter / 3; //small antena than body
+        //starts from top of body and positioned at the center of body
+        int EndPoint = centerY - diameter/2 - antennaLength; //position the antena beyond body
+        g.drawLine(centerX, body_y, centerX, EndPoint);
+
+        //adding name to drawing
+        FontMetrics fm = g.getFontMetrics();
+        int textWidth = fm.stringWidth(name);
+        int textX = centerX + textWidth/3; //put text center
+        int textY = centerY; //put text below drawing
+        Name drName = new Name(textX, textY, name, 8);
+        drName.draw(g);
+
+    }
 
     
     /* updateLocation
@@ -91,7 +111,9 @@ public class SateLite implements DrawingCanvas {
      * updates location of the planet on the map
     */
     public void updateLocation() {
-        angle += 0.05;
+        angle += speed; //update the angle
+
+        //if angle exceeds 360 - 360 from it i.e 540 - 360 = 180
         if(angle > 2 * Math.PI){
             angle -= 2 * Math.PI;
         }

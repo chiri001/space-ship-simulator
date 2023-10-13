@@ -13,7 +13,7 @@ import java.awt.*;
 import javax.swing.*;
 
 
-//My map class that is incharge of handling elements in the map
+//ObjectInformation class incharge of handling elements in the display box
 class ObjectInformation extends JPanel {
 
     private ObjectBoxCanvas objRect;
@@ -23,6 +23,7 @@ class ObjectInformation extends JPanel {
         //create drawings
         objRect = new ObjectBoxCanvas();
     }
+    
     /* 
      * Paints the drawings initiated in the class
     */
@@ -33,6 +34,7 @@ class ObjectInformation extends JPanel {
         objRect.drawObj(graphic_2d, getSize(), clickedObj);
     }
 
+    //sets a DrawingCanvas object when called
     public void set_object(DrawingCanvas object) {
         this.clickedObj = object;
         this.repaint();

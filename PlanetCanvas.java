@@ -1,4 +1,13 @@
 
+/*
+ * Name : Rennie Kipchirchir
+ * Project: Spaceship Simulator
+ * File: PlanetCanvas.java
+ * Date modified: 10/12/23
+ * 
+ * This file contains Planet Canvas responsible for drawing planets
+ */
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -16,6 +25,8 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
     private int y = 0;
     private ObjectListener lstn;
     private int population;
+    private int scale = 15;
+    private double speed = 0.05;
 
     private ArrayList<SateLite> sateLiteList = new ArrayList<>();
 
@@ -26,11 +37,11 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
         this.population = satelites;
 
         int orbitRadius = diameter;
-        double angle = 2 * Math.PI / population;
+        double angle = 2 * Math.PI / population; //divide angles equally
 
         for(int i = 0; i < population; i++) {
             SateLite sl = new SateLite(orbitRadius);
-            sl.set_angle(i * angle);
+            sl.set_angle(i * angle); //sets angle for each satelite from planet
             sateLiteList.add(sl);
         }
     }
@@ -53,7 +64,7 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
     }
 
     public double get_speed(){
-        return this.yOffset;
+        return this.speed;
     }
 
     /* draw 
@@ -62,7 +73,7 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
     */
     public void draw(Graphics2D g, Dimension canvasSize) {
         this.diameter = (Math.min(canvasSize.width, 
-                        canvasSize.height) / (int)(0.6 * Global.SCALE)); //planet diameter
+                        canvasSize.height) / (int)(0.6 * scale));//planet diameter
         
         //calculating x and y coordinate of plane
         this.x = (int) ((canvasSize.width - diameter) / xOffset);
@@ -71,13 +82,14 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
         g.setColor(Color.blue);
         g.fillOval(x, y, diameter, diameter);
 
-        int orbitRadius = diameter / 2;
+        int orbitRadius = diameter / 2; //get radius
 
         for(SateLite sate_lite : sateLiteList) {
-            sate_lite.set_centre(orbitRadius, x, y);
-            sate_lite.draw(g, canvasSize);
+            sate_lite.set_centre(orbitRadius, x, y); //radius, centre of circle
+            sate_lite.draw(g, canvasSize); //draws satelite
         }
 
+        //draw name of object
         FontMetrics fm = g.getFontMetrics();
         int textWidth = fm.stringWidth(name);
         int textX = x + textWidth/3; //put text center
@@ -89,26 +101,29 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
 
     //updates location of planet on map when called
     public void updateLocation() {
-        yOffset -= 0.05;
+        yOffset -= speed;
 
+        //update position of satelite
         for(SateLite sate_lite : sateLiteList) {
             sate_lite.updateLocation();
         }
     }
 
-    //updates location of planet on map when called
+    //rewinds planet movement when called
     public void rewind() {
-        yOffset += 0.05;
+        yOffset += 2 * speed;
     }
 
+    //mouse eventlistener for planet drawing
     public void mouseClicked(MouseEvent e) {
+        //setting the bounds of the planet
         Rectangle2D planetBounds = new Rectangle2D.Double(x, y, diameter, diameter);
+
+        //check if the region bound is clicked
         if(planetBounds.contains(e.getPoint())) {
-            //System.out.println("Planet Clicked");
             if(lstn != null){
                 lstn.onObjectClicked(this);
             }
-
         }
     }
 

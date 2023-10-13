@@ -9,8 +9,6 @@ class PointerCanvas implements DrawingCanvas {
     private double yOffset = 2;
 
     public void set_offset(double xOffset, double yOffset){
-        this.xOffset = 2;
-        this.yOffset = 2;
     }
     public double get_xOffset(){
         return this.xOffset;

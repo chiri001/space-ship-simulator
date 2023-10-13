@@ -1,6 +1,12 @@
 
-
-
+/*
+ * Name : Rennie Kipchirchir
+ * Project: Spaceship Simulator
+ * File: PlanetListener.java
+ * Date modified: 10/12/23
+ * 
+ * This file contains Planet Canvas listener responsible for moving the planet
+ */
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,17 +17,17 @@ public class PlanetListener implements ActionListener {
     private PlanetCanvas planet;
     private MyMap myMap;
 
-    /* PointerUpdateListener
-     * parameters include the pointer hand and the parent container i.e map
-     * returns nothing
-     * constructor for the class
+    /* 
+    * Constructor
+    * takes planet and map
     */
     public PlanetListener(PlanetCanvas planet, MyMap map) {
         this.planet = planet;
         this.myMap = map;
     }
 
-    /*implements the rotation action but relies on PointerCanvas class fn()
+    /*
+    * implements actions to be performed
     */
     public void actionPerformed(ActionEvent e) {
         planet.updateLocation();

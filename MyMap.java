@@ -4,14 +4,13 @@
  * File: MyMap.java
  * Date modified: 10/05/23
  * 
- * This file contains MyMap class. It is inform of a circle. The map contians
- * other items drawn in it. 
+ * This file contains MyMap class. The map contians all the drawings on the 
+ * map including the boundary drawing for the map. 
  */
 
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
-import java.util.Random;
 import javax.swing.*;
 
 //My map class that is incharge of handling elements in the map
@@ -30,10 +29,13 @@ class MyMap extends JPanel implements ObjectListener {
     private Timer asteroidTimer;
     private Timer shipTimer;
     private Timer planetTimer;
+    private Timer sound_alarm;
 
-
+    //variable to store the the rectangle where object can be displayed 
+    //when clicked
     private ObjectInformation objectInfoInstance;
 
+    //variable used by timer to set speed of objects on map
     private int starting_speed = 200;
 
     public MyMap() {
@@ -64,17 +66,23 @@ class MyMap extends JPanel implements ObjectListener {
 
         shipTimer = new Timer(starting_speed / 2, 
                                 new ShipListener(spaceShipCanvas, this));
+        sound_alarm = new Timer(500, 
+                            new MySpaceshipListener(mySpaceShip, this));
         
     }
 
+    //the function takes the rectangle that displays clicked drawings and
+    //stores it in the class
     public void add_object_rectangle(ObjectInformation objInfoRect) {
         this.objectInfoInstance = objInfoRect;
     }
 
+    //function handles when a drawing on map is clicked
     public void onObjectClicked(DrawingCanvas canvas) {
         objectInfoInstance.set_object(canvas);
         repaint();
     }
+
     //starts simulation by starting the timer
     public void start_simulation() {
         timer.start();
@@ -89,8 +97,17 @@ class MyMap extends JPanel implements ObjectListener {
         asteroidTimer.stop();
         planetTimer.stop();
         shipTimer.stop();
+        stop_alarm();
+
     }
 
+    //functions stops alarm when called
+    public void stop_alarm() {
+        mySpaceShip.reset_color();
+        sound_alarm.stop();
+    }
+
+    //forwards the simulation by updating speed
     public void forward_simulation() {
         asteroidTimer.setDelay((starting_speed) / 2);
         planetTimer.setDelay((2 * starting_speed) / 2);
@@ -99,21 +116,22 @@ class MyMap extends JPanel implements ObjectListener {
         repaint();
     }
 
+    //rewinds the simulation
     public void rewind_simulation() {
         /*resets forward to default values */
         asteroidTimer.setDelay(starting_speed);
         planetTimer.setDelay(2 * starting_speed);
         shipTimer.setDelay(starting_speed /2);
 
+        //calls drawings rewind to rewind program
         asteroidCanvas.rewind();
         planetCanvas.rewind();
         spaceShipCanvas.rewind();
         repaint();
     }
 
+    //activates my spaceship alarm when alarm button is clicked
     public void activate_alarm() {
-        Timer sound_alarm = new Timer(500, 
-                            new MySpaceshipListener(mySpaceShip, this));
         sound_alarm.start();
         repaint();
     }
@@ -134,7 +152,6 @@ class MyMap extends JPanel implements ObjectListener {
         int x = map_info[0];// top left x coordinate
         int y = map_info[1];// top left y coordinate
         Ellipse2D clipMap = new Ellipse2D.Double(x, y, 2 * radius, 2 * radius);
-        Shape oldClip = graphic_2d.getClip();
         graphic_2d.setClip(clipMap); //setting new clip
 
         //drawing my spaceship
@@ -147,7 +164,5 @@ class MyMap extends JPanel implements ObjectListener {
         asteroidCanvas.draw(graphic_2d, getSize());
         pointerCanvas.draw(graphic_2d, getSize());
         debriCanvas.draw(graphic_2d, getSize());
-
-        graphic_2d.setClip(oldClip);
     }
 }

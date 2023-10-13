@@ -1,4 +1,12 @@
 
+/*
+ * Name : Rennie Kipchirchir
+ * Project: Spaceship Simulator
+ * File: SpaceShipCanvas.java
+ * Date modified: 10/12/23
+ * 
+ * This file is responsible for drawing a spaceship
+ */
 
 import java.awt.*;
 import java.awt.event.MouseListener;
@@ -12,6 +20,8 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
     private double yOffset;
     private String name = "Spaceship";
     private ObjectListener lstn;
+    private double speed = 0.02;
+    private int scale = 15;
 
     public SpaceShipCanvas(ObjectListener lstn, double xOffset, double yOffset) {
         this.lstn = lstn;
@@ -29,13 +39,14 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
         return name;
     }
     public double get_speed(){
-        return yOffset;
+        return speed;
     }
 
     public void set_offset(double xOffset, double yOffset){
         this.xOffset = xOffset;
         this.yOffset = yOffset;
     }
+
     /* draw 
      * parameters include a 2d graphics and dimesnions of drawing canvas
      * returns nothing
@@ -45,7 +56,7 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
         int baseSize = Math.min(canvasSize.width, canvasSize.height);
 
         //length of spaceship landing base
-        int spaceshipLength = baseSize / Global.SCALE; 
+        int spaceshipLength = baseSize / scale; 
         
         //height for the main body for the spaceship (taller)
         int spaceshipHeight = spaceshipLength / 2;
@@ -53,6 +64,7 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
         //height of the side compartments for a spaceship(shorter sides)
         int smallTriangleHeight = spaceshipHeight / 3; 
 
+        //coordinates to put drawing on map (center of ship position)
         int centerX = (int) (canvasSize.height / yOffset);
         int centerY = (int) (canvasSize.width / xOffset);
         int x_divisor = 2;
@@ -85,29 +97,35 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
         g.setColor(Color.black);
         g.fillPolygon(xPoints, yPoints, 7);
 
+        //draw the name of drawing
         FontMetrics fm = g.getFontMetrics();
         int textWidth = fm.stringWidth(name);
+        //find most left of the ship
         int textX = centerY - spaceshipLength / x_divisor - textWidth/6; //put text center
+        //find the base level of ship and add some distance down
         int textY =  centerX - spaceshipHeight / x_divisor + (int) ( 1.8 * fm.getHeight()); //put text below drawing
         Name drName = new Name(textX, textY, name, 10);
         drName.draw(g);
     }
 
+    //updates location of the planet
     public void updateLocation() {
-        yOffset -= 0.02;
+        yOffset -= speed;
     }
 
-    //updates location of planet on map when called
+    //rewinds planet movement
     public void rewind() {
-            yOffset += 0.08;
+        yOffset += 2 * speed;
     }
 
+    //function to handle when drawing is clicked
     public void mouseClicked(MouseEvent e) {
         ScreenPosition obj = new ScreenPosition();
         Color clickedObj = obj.getPixelColor(e.getXOnScreen(), e.getYOnScreen());
 
         if(clickedObj.equals(Color.black)) {
             if(lstn != null){
+                //calls object listener to draw object on display box
                 lstn.onObjectClicked(this);
             }
         }

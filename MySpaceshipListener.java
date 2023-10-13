@@ -1,23 +1,33 @@
+
+/*
+ * Name : Rennie Kipchirchir
+ * Project: Spaceship Simulator
+ * File: MySpaceshipListener.java
+ * Date modified: 10/05/23
+ * 
+ * This file contains the listener for the MySpaceship class.
+ */
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/*class that implements the rotation aspect of the pointer */
+/*class that implements listener for MySpaceship class
+ * class is used by timer to achieve desired action
+*/
 public class MySpaceshipListener implements ActionListener {
     
     private MySpaceship spaceShipCanvas;
     private MyMap myMap;
 
-    /* ShipListener
-     * parameters include the pointer hand and the parent container i.e map
-     * returns nothing
-     * constructor for the class
+    /* constructor
     */
     public MySpaceshipListener(MySpaceship pCanvas, MyMap map) {
         this.spaceShipCanvas = pCanvas;
         this.myMap = map;
     }
 
-    /*implements the rotation action but relies on SpaceShipCanvas class fn()
+    /*
+    * calls activate alarm when alarm is clicked
     */
     public void actionPerformed(ActionEvent e) {
         spaceShipCanvas.activate_alarm();

@@ -1,7 +1,15 @@
+/*
+ * Name : Rennie Kipchirchir
+ * Project: Spaceship Simulator
+ * File: Name.java
+ * Date modified: 10/12/23
+ * 
+ * This file is responsible for drawing names of given drawings
+ */
 
 import java.awt.*;
 
-//class that creates a circle drawing using the drawing canvas interface
+//class that draws names
 public class Name {
     
     String name;
@@ -16,10 +24,11 @@ public class Name {
         this.fontSize = fontSize;
     }
 
+    //uses 2d graphics to draw name on map
     public void draw(Graphics2D g) {
         Font originalFont = g.getFont();
-        Font newFont = originalFont.deriveFont(10f);
-        g.setFont(newFont);
-        g.drawString(name, x, y);
+        Font newFont = originalFont.deriveFont(fontSize); 
+        g.setFont(newFont); //set desired fontsize
+        g.drawString(name, x, y); //relies on provided x and y coordinate
     }
 }

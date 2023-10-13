@@ -1,4 +1,13 @@
 
+/*
+ * Name : Rennie Kipchirchir
+ * Project: Spaceship Simulator
+ * File: ShipListener.java
+ * Date modified: 10/12/23
+ * 
+ * This file implements a listener for the Shipcanvas class
+ */
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

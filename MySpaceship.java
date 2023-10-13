@@ -1,20 +1,30 @@
 
+/*
+ * Name : Rennie Kipchirchir
+ * Project: Spaceship Simulator
+ * File: MySpaceship.java
+ * Date modified: 10/05/23
+ * 
+ * This file contains the drawing for the main spaceship for the simulation.
+ */
 
 import java.awt.*;
 
 import java.awt.event.MouseEvent;
 
-//SpaceShipCanvas Class that draws a spaceship
+//draws a spaceship that can be controlled in the simulation
 public class MySpaceship extends SpaceShipCanvas{
-
 
     private double xOffset;
     private double yOffset;
     private String name = "Benatar";
-    private ObjectListener lstn;
     private Color default_color = Color.BLACK;
     private boolean isAlarmActivated = false;
+    private int scale = 15;
+    private double speed = 1;
 
+    //constructor
+    //takes an Objectlistener for the ship
     public MySpaceship(ObjectListener lstn) {
         super(lstn, 2, 2);
     }
@@ -29,13 +39,14 @@ public class MySpaceship extends SpaceShipCanvas{
         return name;
     }
     public double get_speed(){
-        return yOffset;
+        return speed;
     }
 
     public void set_offset(double xOffset, double yOffset){
         this.xOffset = 2;
         this.yOffset = 2;
     }
+
     /* draw 
      * parameters include a 2d graphics and dimesnions of drawing canvas
      * returns nothing
@@ -45,7 +56,7 @@ public class MySpaceship extends SpaceShipCanvas{
         int baseSize = Math.min(canvasSize.width, canvasSize.height);
 
         //length of spaceship landing base
-        int spaceshipLength = baseSize / Global.SCALE; 
+        int spaceshipLength = baseSize / scale; 
         
         //height for the main body for the spaceship (taller)
         int spaceshipHeight = spaceshipLength / 2;
@@ -53,6 +64,7 @@ public class MySpaceship extends SpaceShipCanvas{
         //height of the side compartments for a spaceship(shorter sides)
         int smallTriangleHeight = spaceshipHeight / 3; 
 
+        //coordinates to put drawing on map (center of ship position)
         int centerX = (int) (canvasSize.height / yOffset);
         int centerY = (int) (canvasSize.width / xOffset);
         int x_divisor = 2;
@@ -85,6 +97,7 @@ public class MySpaceship extends SpaceShipCanvas{
         g.setColor(default_color);
         g.fillPolygon(xPoints, yPoints, 7);
 
+        //name of the drawing
         FontMetrics fm = g.getFontMetrics();
         int textWidth = fm.stringWidth(name);
         int textX = centerY - spaceshipLength / x_divisor - textWidth/6; //put text center
@@ -94,35 +107,27 @@ public class MySpaceship extends SpaceShipCanvas{
     }
 
 
-    //updates location of planet on map when called
-    public void rewind() {
-            yOffset += 0.08;
-    }
-
+    //funtion activates the alarm of the ship when alarm button is clicked
     public void activate_alarm(){
         if(!isAlarmActivated){
+            //activate alarm by turning the ship red
             Color translucent_red = new Color(255, 0, 0, 128);
             default_color = translucent_red;
             isAlarmActivated = true;
         } else {
+            //turns the ship back to black to mimic alarm blinking
             reset_color();
             isAlarmActivated = false;
         }
     }
 
+    //resets the color of the ship when called
     public void reset_color(){
         default_color = Color.black;
     }
 
+    
     public void mouseClicked(MouseEvent e) {
-        ScreenPosition obj = new ScreenPosition();
-        Color clickedObj = obj.getPixelColor(e.getXOnScreen(), e.getYOnScreen());
-
-        if(clickedObj.equals(Color.black)) {
-            if(lstn != null){
-                lstn.onObjectClicked(this);
-            }
-        }
     }
 
     public void mousePressed(MouseEvent e) {

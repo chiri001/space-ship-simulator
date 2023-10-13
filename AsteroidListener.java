@@ -1,24 +1,29 @@
+/*
+ * Name : Rennie Kipchirchir
+ * Project: Spaceship Simulator
+ * File: AsteroidListener.java
+ * Date modified: 10/05/23
+ * 
+ * The file handles listener for AsteroidCanvas
+ */
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/*class that implements the rotation aspect of the pointer */
+/*handles update of location*/
 public class AsteroidListener implements ActionListener {
     
     private AsteroidCanvas asteroidCanvas;
     private MyMap myMap;
 
-    /* AsteroidListener
-     * parameters include the pointer hand and the parent container i.e map
-     * returns nothing
-     * constructor for the class
+    /* constructor
     */
     public AsteroidListener(AsteroidCanvas pCanvas, MyMap map) {
         this.asteroidCanvas = pCanvas;
         this.myMap = map;
     }
 
-    /*implements the rotation action but relies on AsteroidCanvas class fn()
+    /*implements movement of the asteroid but relies on Asteroid Canvas class
     */
     public void actionPerformed(ActionEvent e) {
         asteroidCanvas.updateLocation();
