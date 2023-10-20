@@ -7,10 +7,17 @@
  * This file contains MyPanel calss that creates a new JPanel for use
  */
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+
 import javax.swing.*;
 
 /*class that creates a panel for drawing and adding other items */
 public class MyPanel extends JPanel {
+
+
+    private boolean isEastPresent = false;
+    private JPanel eastPanel;
     /* constructor 
      * creates a new layout for the panel
      * creates other layouts for the panel
@@ -46,6 +53,42 @@ public class MyPanel extends JPanel {
             //creates the east panel only if width and height are greater than
             //600px
             create_east_layout(constraint, map); 
+        }
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                adjustLayout(constraint, map);
+            }
+        });
+    }
+
+    private void adjustLayout(GridBagConstraints constraint, MyMap map){
+        Dimension size = getSize();
+
+        if(size.width <= 600 && size.height <= 650){
+            //remove east layout if present
+            if(eastPanel != null){
+                remove(eastPanel);
+                eastPanel = null;
+            } 
+        } else {
+        
+            //return east layout if absent
+            if(eastPanel == null){
+                //return the east layout
+                create_east_layout(constraint, map);
+            }
+        }
+        revalidate();
+        repaint();
+    }
+
+    public void remove_east_layout(){
+        for(Component comp : getComponents()) {
+            if(comp instanceof JPanel){
+                
+            }
         }
     }
 
@@ -147,7 +190,7 @@ public class MyPanel extends JPanel {
      * takes no parameters
      */
     private void create_east_layout(GridBagConstraints constraint, MyMap map) {
-        JPanel eastPanel = new  JPanel(new GridBagLayout());
+        eastPanel = new  JPanel(new GridBagLayout());
         eastPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 
                                                             2));
         constraint.gridx = 1;

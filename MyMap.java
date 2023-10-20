@@ -31,6 +31,7 @@ class MyMap extends JPanel implements ObjectListener {
 
     //variable used by timer to set speed of objects on map
     private int forward = 2;
+    private int initial_length;
     private boolean isSimulationStopped = false;
     private ArrayList<DrawingCanvas> allDrawables = new ArrayList<>();
 
@@ -59,6 +60,7 @@ class MyMap extends JPanel implements ObjectListener {
         this.debriCanvas = new SpaceDebriCanvas(this);
         allDrawables.add(debriCanvas);
 
+        initial_length = 6;
         
         start_simulation(); //start the simulation
     }
@@ -142,9 +144,10 @@ class MyMap extends JPanel implements ObjectListener {
         stop_simulation();
 
         //reset all objects
-        for(DrawingCanvas drawing : allDrawables) {
-            drawing.reset();
+        for(int i = 0; i < initial_length; i++) {
+            allDrawables.get(i).reset();
         }
+        
         //reset values
         forward = 2;
         
@@ -166,7 +169,11 @@ class MyMap extends JPanel implements ObjectListener {
             AsteroidCanvas newAsteroid = new AsteroidCanvas(x, y, this);
             allDrawables.add(newAsteroid);
         }
-
+        if(! isSimulationStopped){
+            for(DrawingCanvas drawing: allDrawables){
+                drawing.start(); //to start timer for the new drawings
+            }
+        }
         repaint();
     }
 
