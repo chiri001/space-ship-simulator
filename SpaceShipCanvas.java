@@ -22,13 +22,14 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
     private double yOffset;
     private String name = "Spaceship";
     private ObjectListener lstn;
-    private double move = 0.02;
+    private double move = 0.09;
     private int speed = 1000;
     private int scale = 15;
     private double def_xOffset;
     private double def_yOffset;
     private Timer shipTimer;
     private MyMap myMap;
+    private int highestY;
 
     public SpaceShipCanvas(ObjectListener lstn, double xOffset, double yOffset, MyMap map) {
         this.lstn = lstn;
@@ -52,11 +53,6 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
     }
     public int get_speed(){
         return speed;
-    }
-
-    public void set_offset(double xOffset, double yOffset){
-        this.xOffset = xOffset;
-        this.yOffset = yOffset;
     }
 
     public void start() {
@@ -119,8 +115,7 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
         g.setColor(Color.black);
         g.fillPolygon(xPoints, yPoints, 7);
 
-        // this.x = 
-        // this.y = 
+        this.highestY = centerX - spaceshipHeight / x_divisor; //highest point of ship
 
         //draw the name of drawing
         FontMetrics fm = g.getFontMetrics();
@@ -131,6 +126,15 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
         int textY =  centerX - spaceshipHeight / x_divisor + (int) ( 1.8 * fm.getHeight()); //put text below drawing
         Name drName = new Name(textX, textY, name, 10);
         drName.draw(g);
+    }
+
+    public boolean isWithinMap(int y, int dimaeter){
+        int bottomY = y + dimaeter;
+        if(highestY > bottomY){
+            return false;
+        }
+
+        return true;
     }
 
     //updates location of the planet

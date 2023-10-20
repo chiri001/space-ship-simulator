@@ -4,12 +4,12 @@
  * File: AlarmButton.java
  * Date modified: 10/05/23
  * 
- * The file handles alarm button
+ * The file handles direction buttons.
  */
 
 import java.awt.event.ActionEvent;
 
-//class responsible for alarm button
+//class responsible for direction button
 //subclass for MyButoon
 public class ArrowButton extends MyButton {
 

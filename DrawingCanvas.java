@@ -15,7 +15,6 @@ import java.awt.*;
 public interface DrawingCanvas {
 
     void draw(Graphics2D g, Dimension canvasSize);
-    void set_offset(double xOffset, double yOffset);
     double get_xOffset();
     double get_yOffset();
     String get_name();
@@ -26,4 +25,5 @@ public interface DrawingCanvas {
     void rewind();
     void reset();
     void move_item(String direction);
+    boolean isWithinMap(int y, int diameter);
 }

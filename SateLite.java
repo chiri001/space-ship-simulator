@@ -35,10 +35,6 @@ public class SateLite implements DrawingCanvas {
         this.angle = angle;
     }
 
-    public void set_offset(double xOffset, double yOffset){
-        this.xOffset = xOffset;
-        this.yOffset = yOffset;
-    }
     public double get_xOffset(){
         return this.xOffset;
     }
@@ -141,5 +137,8 @@ public class SateLite implements DrawingCanvas {
 
     @Override
     public void move_item(String direction) {
+    }
+    public boolean isWithinMap(int y, int dimaeter){
+        return true;
     }
 }

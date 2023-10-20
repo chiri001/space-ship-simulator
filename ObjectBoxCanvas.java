@@ -21,8 +21,6 @@ public class ObjectBoxCanvas implements DrawingCanvas {
     private int x = 10;
     private int y = 10;
 
-    public void set_offset(double xOffset, double yOffset){
-    }
 
     public double get_xOffset(){
         return this.xOffset;
@@ -35,6 +33,9 @@ public class ObjectBoxCanvas implements DrawingCanvas {
     }
     public int get_speed(){
         return 0;//doesn't move
+    }
+    public boolean isWithinMap(int y, int dimaeter){
+        return true; //default since N/A to this drawing
     }
 
     //function that draws object box then draws items in it

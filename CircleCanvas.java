@@ -20,8 +20,6 @@ public class CircleCanvas implements DrawingCanvas {
     private double yOffset = 2;
     private int padding = 15;
 
-    public void set_offset(double xOffset, double yOffset){
-    }
     public double get_xOffset(){
         return this.xOffset;
     }
@@ -33,6 +31,9 @@ public class CircleCanvas implements DrawingCanvas {
     }
     public int get_speed(){
         return 0;
+    }
+    public boolean isWithinMap(int y, int dimaeter){
+        return true;
     }
 
     /* draw 

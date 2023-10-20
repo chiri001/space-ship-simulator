@@ -1,10 +1,10 @@
 /*
  * Name : Rennie Kipchirchir
  * Project: Spaceship Simulator
- * File: AlarmButton.java
+ * File: FireButton.java
  * Date modified: 10/05/23
  * 
- * The file handles alarm button
+ * The file handles fire button.
  */
 
 import java.awt.event.ActionEvent;
@@ -12,8 +12,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 
-//class responsible for alarm button
-//subclass for MyButoon
+//class responsible for fire button
 public class FireButton extends MyButton {
 
     private MyMap myMap; //map of the program
@@ -21,6 +20,8 @@ public class FireButton extends MyButton {
     public FireButton(String label, MyMap map){
         super(label);
         this.myMap = map;
+
+        //add an image icon for button
         ImageIcon missileIcon = new ImageIcon("Images/missile.png");
         this.setIcon(missileIcon); //set icon on button
 
@@ -30,9 +31,10 @@ public class FireButton extends MyButton {
     }
 
 
-    //function tells myspaceship to acrivate alarm.
+    //function tells myspaceship to release a missile
     @Override
     public void actionPerformed(ActionEvent e) {
+        //Not yet implemented for now
         super.actionPerformed(e); //call default listener for MyButton
     }
 

@@ -23,7 +23,7 @@ public class MySpaceship extends SpaceShipCanvas{
     private Color default_color = Color.BLACK;
     private boolean isAlarmActivated = false;
     private int scale = 15;
-    private double speed = 1;
+    private int speed = 1000;
     private Timer alarmTimer;
 
     //constructor
@@ -46,12 +46,13 @@ public class MySpaceship extends SpaceShipCanvas{
         return name;
     }
     public int get_speed(){
-        return 0;
+        return speed;
     }
 
-    public void set_offset(double xOffset, double yOffset){
-    }
 
+    public boolean isWithinMap(int y, int dimaeter){
+        return true;//always true since it is the central object
+    }
     /* draw 
      * parameters include a 2d graphics and dimesnions of drawing canvas
      * returns nothing
@@ -111,13 +112,14 @@ public class MySpaceship extends SpaceShipCanvas{
         drName.draw(g);
     }
 
+    //function sounds the spaceship alarm
     public void sound_alarm() {
-        alarmTimer.start();
+        alarmTimer.start(); //start alarm timer
     }
 
     public void reset_alarm() {
-        alarmTimer.stop();
-        reset_color();
+        alarmTimer.stop(); //stop timer
+        reset_color(); //reset spaceship color
     }
     //funtion activates the alarm of the ship when alarm button is clicked
     public void activate_alarm(){

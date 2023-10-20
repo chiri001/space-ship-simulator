@@ -25,6 +25,7 @@ public class SpaceDebriCanvas implements DrawingCanvas {
     private int speed = 150;
     private Timer debriTimer;
     private MyMap myMap;
+    private int highestY;
 
 
     private ArrayList<SpaceDebri> debriList = new ArrayList<>();
@@ -44,8 +45,6 @@ public class SpaceDebriCanvas implements DrawingCanvas {
         debriTimer = new Timer(speed, new SpaceDebriListener(this, myMap));
     }
 
-    public void set_offset(double xOffset, double yOffset){
-    }
     public double get_xOffset(){
         return this.xOffset;
     }
@@ -128,6 +127,14 @@ public class SpaceDebriCanvas implements DrawingCanvas {
         
         g.fillPolygon(xPoints, yPoints, numSides);
 
+        this.highestY = Integer.MAX_VALUE;
+        for (int i = 0; i < numSides; i++) {
+            int currentY = centerY + (int)(Math.sin(theta * i) * (asteroidSize - offsets[i]));
+            if (currentY < highestY) {
+                this.highestY = currentY;
+            }
+        }
+
         //draws name of drawing
         FontMetrics fm = g.getFontMetrics();
         int textWidth = fm.stringWidth(name);
@@ -138,6 +145,9 @@ public class SpaceDebriCanvas implements DrawingCanvas {
 
     }
 
+    public boolean isWithinMap(int y, int dimaeter){
+        return true;
+    }
     
     /* updateLocation
      * parameters none

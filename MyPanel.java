@@ -66,7 +66,7 @@ public class MyPanel extends JPanel {
     private void adjustLayout(GridBagConstraints constraint, MyMap map){
         Dimension size = getSize();
 
-        if(size.width <= 600 && size.height <= 650){
+        if(size.width < 600 || size.height < 650){
             //remove east layout if present
             if(eastPanel != null){
                 remove(eastPanel);
@@ -80,16 +80,9 @@ public class MyPanel extends JPanel {
                 create_east_layout(constraint, map);
             }
         }
-        revalidate();
-        repaint();
-    }
+        revalidate(); //revalidate panel to adjust new changes
 
-    public void remove_east_layout(){
-        for(Component comp : getComponents()) {
-            if(comp instanceof JPanel){
-                
-            }
-        }
+        repaint(); //repaint to reflect changes
     }
 
     /*function that creates the layout for the west side of the panel

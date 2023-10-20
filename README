@@ -2,7 +2,7 @@
  - Name : Rennie Kipchirchir
  - Spaceship simulator project
  - File: README
- - Date modified: 10/13/23
+ - Date modified: 10/20/23
 -----------------------------------------------------------------------------
                         Project Description
 -----------------------------------------------------------------------------
@@ -37,6 +37,25 @@ and an alarm button if collission cannot be avoided/ potential impact.
 -----------------------------------------------------------------------------
                       What program does so far
 -----------------------------------------------------------------------------
+
+                    Week 5 :
+----------------------------------------
+I have implemented movement of all my drawings.
+
+I have implemented more controls. The reset button that resets the screen 
+to initial drawinds. I have also implemented the direction buttons which 
+moves items in the desired direction.
+
+I have also implemented a new section in which people could add drawings
+to the map.
+
+My forward and direction buttons only work when simulation is running and does
+not work if simulation is stopped.
+
+My Layout also resizes accordingly and the east panel is removed if screens
+goes below certain dimension in which the righ objects can no longer be well 
+displayed.
+
 
                     Week 4 :
 ----------------------------------------
@@ -94,7 +113,7 @@ No any outstanding bug
 Program is implemented using Java.swing interface
 
 Interfaces:
----------------------------------------------------------------------
+-------------------
 |-- represents classes implementing the interface
 
 DrawingCanvas
@@ -103,6 +122,7 @@ DrawingCanvas
     |--SateLite
     |--PlanetCanvas
     |--SpaceDebriCanvas
+    |--ObjectBoxCanvas
 
 ObjectListener
     |--MyMap
@@ -121,6 +141,9 @@ JButton
         |--RewindButton
         |--ForwardButton
         |--AlarmButton
+        |--FireButton
+        |--ArrowButton
+        |--ResetButton
 
 SpaceShipCanvas
     |--MySpaceship
@@ -129,6 +152,10 @@ JPanel
     |--MyPanel
     |--MyMap
     |--ObjectInformation 
+    |--ObjectDetails
+
+JCombox
+    |--DropDown
 
 
 -----------------------------------------------------------------------
@@ -173,12 +200,68 @@ Main
         |--RewindButton
         |--ForwardButton
         |--AlarmButton
+        |--FireButton
+        |--ArrowButton
+        |--ResetButton
+    
+    |--ObjectDetails
+    
+    |--DropDown
+
 
 --------------------------------------------------------------------------
+
+Collaboration relationships :
+-----------------------------
+MyMap depends on a number of classes to implement different functionalities
+    1.movement of a drawing and pointer listeners are defined in the drawings
+        class. Then my map simply calls this functions to effect a change on a
+        drawing. i.e MyMap has a rewind function that when called calls 
+        the drawings rewind function.
+        so map.rewind()--> drawing.rewing(); drawing.rewind() has the 
+        implementation of how rewind should work.
+        This is the same for the following functions in MyMap:
+        1. start_simulation calls drawing.start() which starts drawing timer.
+        2.stop_simulation calls drawing.stop() which stops drawing timer.
+        3.rewind_simulation calls drawing.rewind()
+        4.activate_alarm --> calls drawing.activate_alarm (only applicable 
+        for one drawing)
+        5.reset_simulation -->calls reset for default drawings
+        6.paintcomponent --> calls draing.draw functions
+
+MyPanel: 
+    relies on JPanel to create drawing panls
+    relies on MyMap to create map drawings on central panel
+    relies on button classes to implement functionalites of button added 
+    to panels
+    relies on ObjectInformatin to draw a display triangle on east layout
+    relies on ObjectDetails to create a display to enable user add coordinates 
+    for drawing on the map
+    relies on DropDown to add a drop down bar on east layout
+    relies on Toolkit to get screen size
+
+-----------------------------------------------------------------
+
+Encapsulation Secrets:
+-----------------------
+
+MyMap:
+    manages objects draen on the map
+    manages new drawing generations
+    manages drawings to be drawn on map
+
+MyPanel
+    manages the creation of three main drawing layouts for the screen.
+    (bottom layout for buttons, central layout for map, and east layout 
+    for other buttons and widgets)
+    tracks whether eastpanel is present and eliminates the eastpanel if the 
+    dimensions go below 600 by 650.
+
+
+------------------------------------------------------------------
 
 
 How to run: 
 ---------------
 1. run javac *.java
 2. run java Main
-3. Click start button, bottom of window to begin simulation

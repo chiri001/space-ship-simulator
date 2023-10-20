@@ -12,6 +12,7 @@
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.*;
 
@@ -31,37 +32,52 @@ class MyMap extends JPanel implements ObjectListener {
 
     //variable used by timer to set speed of objects on map
     private int forward = 2;
-    private int initial_length;
     private boolean isSimulationStopped = false;
     private ArrayList<DrawingCanvas> allDrawables = new ArrayList<>();
+    private ArrayList<DrawingCanvas> defDrawings = new ArrayList<>();
+    private ArrayList<String> newDrawings = new ArrayList<>();
+    private Timer drawing_generator_timer;
 
     public MyMap() {
         //create drawings
-        this.circleCanvas = new CircleCanvas();
 
+        this.circleCanvas = new CircleCanvas(); //boundary for map
+
+        //other drawings
         this.spaceShipCanvas = new SpaceShipCanvas(this, 3, 3, this);
         this.addMouseListener(spaceShipCanvas);
         allDrawables.add(spaceShipCanvas);
+        defDrawings.add(spaceShipCanvas);
 
         this.mySpaceShip = new MySpaceship(this, 2, 2, this);
         this.addMouseListener(mySpaceShip);
         allDrawables.add(mySpaceShip);
+        defDrawings.add(mySpaceShip);
 
         this.planetCanvas = new PlanetCanvas(this, 1.5, 4, 5, this);
         this.addMouseListener(planetCanvas);
         allDrawables.add(planetCanvas);
+        defDrawings.add(planetCanvas);
 
         this.pointerCanvas = new PointerCanvas(this);
         allDrawables.add(pointerCanvas);
+        defDrawings.add(pointerCanvas);
 
         this.asteroidCanvas = new AsteroidCanvas(2, 4.5, this);
         allDrawables.add(asteroidCanvas);
+        defDrawings.add(asteroidCanvas);
 
         this.debriCanvas = new SpaceDebriCanvas(this);
         allDrawables.add(debriCanvas);
-
-        initial_length = 6;
+        defDrawings.add(debriCanvas);
         
+        //adding items to randomly generate on map
+        newDrawings.add("Spaceship");
+        newDrawings.add("Planet");
+        newDrawings.add("Asteroid");
+        newDrawings.add("Spacedebri");
+
+        set_drawing_generator(); //initialize new drawing generator
         start_simulation(); //start the simulation
     }
 
@@ -80,21 +96,28 @@ class MyMap extends JPanel implements ObjectListener {
     //starts simulation by starting the timer
     public void start_simulation() {
         for(DrawingCanvas drawing : allDrawables) {
-            drawing.start();
+            drawing.start(); //starts all timers for type
         }
-        repaint();
+        drawing_generator_timer.start(); //starts random generator timer
+
         isSimulationStopped = false;
+        repaint();
+        
     }
 
     //stops simulation by stopping the timer
     public void stop_simulation() {
         stop_alarm();
-
+        
         for(DrawingCanvas drawing : allDrawables) {
-            drawing.stop();
+            drawing.stop(); //stops all timers for drawings
         }
-        repaint();
+
+        drawing_generator_timer.stop();
         isSimulationStopped = true;
+
+        repaint();
+        
 
     }
 
@@ -112,7 +135,7 @@ class MyMap extends JPanel implements ObjectListener {
                 drawing.forward(forward);
             }
 
-            forward *= 2;
+            forward *= 2; //increases speed by multiples of 2
 
             repaint();
         }
@@ -143,9 +166,15 @@ class MyMap extends JPanel implements ObjectListener {
         //stop all ongoing simulation
         stop_simulation();
 
-        //reset all objects
-        for(int i = 0; i < initial_length; i++) {
-            allDrawables.get(i).reset();
+        //clear alldrawables
+        allDrawables.clear();
+
+        //set default drawings to alldrawables
+        allDrawables.addAll(defDrawings);
+
+        //reset all default objects
+        for(DrawingCanvas drawing : allDrawables) {
+            drawing.reset();
         }
         
         //reset values
@@ -155,6 +184,38 @@ class MyMap extends JPanel implements ObjectListener {
         repaint();
     }
 
+    //functions initializes timer for randomizing generation of new drawings
+    public void set_drawing_generator() {
+    
+        int delay = 5000;//every 5seconds generate new drawing from top
+        drawing_generator_timer = new Timer(delay, e->generate_item_to_draw()); 
+    }
+
+    //generates the item to draw randomly
+    public void generate_item_to_draw() {
+        Random rand = new Random();
+        
+        //generate a random index between 0 and 4
+        int index = rand.nextInt(newDrawings.size());
+
+        //generate a random offset between 1 and 5 so that it is within viewprt
+        double x_offset = 1 + rand.nextDouble() * 5; //appear anywhere on x axis
+        double y_offset = 5 + rand.nextDouble(); //appear top of map
+        int satelite = 0;
+
+        if(newDrawings.get(index).equals("Planet")){
+            satelite = rand.nextInt(10); //bound betwn 0 -10 satelites
+        }
+
+        //call add drawings to add item to map
+        addDrawings(x_offset, y_offset, satelite, newDrawings.get(index));
+
+    }
+
+    //function is responsible for adding drawings to the map
+    //parameters include the x_offset, y_offset, number of satelites, and 
+    //name of item to draw
+    //NOTE: satelites is always zero if item is not planet
     public void addDrawings(double x, double y, int satelites, String to_draw) {
     
         if(to_draw.equals("Planet")){
@@ -169,6 +230,12 @@ class MyMap extends JPanel implements ObjectListener {
             AsteroidCanvas newAsteroid = new AsteroidCanvas(x, y, this);
             allDrawables.add(newAsteroid);
         }
+        else if(to_draw.equals("Spacedebri")){
+            SpaceDebriCanvas newdebri = new SpaceDebriCanvas(this);
+            allDrawables.add(newdebri);
+        }
+
+        //start timers for new drawings
         if(! isSimulationStopped){
             for(DrawingCanvas drawing: allDrawables){
                 drawing.start(); //to start timer for the new drawings
@@ -177,10 +244,12 @@ class MyMap extends JPanel implements ObjectListener {
         repaint();
     }
 
+    //function is responsible for moving items in a given direction
     public void move_items(String direction) {
         if( ! isSimulationStopped) {
 
             for(DrawingCanvas drawing : allDrawables) {
+                //call move item for each drawing to move it accordingly
                 drawing.move_item(direction);
             }
         }
@@ -204,12 +273,12 @@ class MyMap extends JPanel implements ObjectListener {
         Ellipse2D clipMap = new Ellipse2D.Double(x, y, 2 * radius, 2 * radius);
         graphic_2d.setClip(clipMap); //setting new clip
 
-        //if drawings are widthin map boundary
+        //check if drawings are widthin map boundary inorder to draw
         for(DrawingCanvas drawing: allDrawables) {
-            //if(drawing.isWithinMap(x, y, 2 * radius, 2 * radius)){
+            if(drawing.isWithinMap(y, 2 * radius)){
                 //draw shapes using draw function in DrawingCanvas interface
                 drawing.draw(graphic_2d, getSize());
-            //}
+            }
         }
     }
 }

@@ -18,8 +18,6 @@ class PointerCanvas implements DrawingCanvas {
         ptimer = new Timer(50, new PointerListener(this, myMap));
     }
 
-    public void set_offset(double xOffset, double yOffset){
-    }
     public double get_xOffset(){
         return this.xOffset;
     }
@@ -44,6 +42,10 @@ class PointerCanvas implements DrawingCanvas {
     public void rewind(){
     }
     public void move_item(){
+    }
+
+    public boolean isWithinMap(int y, int dimaeter){
+        return true; //always true
     }
 
     /* draw 

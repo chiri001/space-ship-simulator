@@ -34,6 +34,7 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
     private double def_yOffset;
     private Timer planetTimer;
     private MyMap myMap;
+    private int highestY;
 
     private ArrayList<SateLite> sateLiteList = new ArrayList<>();
 
@@ -58,10 +59,6 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
         planetTimer = new Timer(speed, new PlanetListener(this, myMap));
     }
 
-    public void set_offset(double xOffset, double yOffset) {
-        this.xOffset = xOffset;
-        this.yOffset = yOffset;
-    }
 
     public double get_xOffset(){
         return this.xOffset;
@@ -88,7 +85,7 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
     }
 
     public void forward(int forward) {
-        planetTimer.setDelay(speed/forward);
+        planetTimer.setDelay(speed/forward); //update timer speeed
     }
 
     /* draw 
@@ -105,6 +102,7 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
 
         g.setColor(Color.blue);
         g.fillOval(x, y, diameter, diameter);
+        this.highestY = y;
 
         int orbitRadius = diameter / 2; //get radius
 
@@ -168,6 +166,15 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
     public void rewind() {
         planetTimer.setDelay(speed);
         yOffset += 2 * move;
+    }
+
+    public boolean isWithinMap(int y, int dimaeter){
+        int bottomY = y + dimaeter;
+        if(highestY > bottomY){
+            //not within map boundary anymore
+            return false;
+        }
+        return true;
     }
 
     //mouse eventlistener for planet drawing

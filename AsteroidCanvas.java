@@ -15,131 +15,145 @@ import javax.swing.Timer;
 //asteroid class that draws an asteroid
 public class AsteroidCanvas implements DrawingCanvas {
 
-        private double xOffset;
-        private double yOffset;
-        private String name = "Asteroid";
-        private double move = 0.05;
-        private int scale = 15;
-        private double def_xOffset;
-        private double def_yOffset;
-        private Timer asteroidTimer;
-        private int speed = 200;
-        private MyMap myMap;
+    private double xOffset;
+    private double yOffset;
+    private String name = "Asteroid";
+    private double move = 0.05;
+    private int scale = 15;
+    private double def_xOffset;
+    private double def_yOffset;
+    private Timer asteroidTimer;
+    private int speed = 200;
+    private MyMap myMap;
+    private int highestY;
 
-        //constructor
-        //takes x and y offset values
-        public AsteroidCanvas( double xOffset, double yOffset, MyMap map) {
-            this.xOffset = xOffset;
-            this.yOffset = yOffset;
-            this.def_xOffset = xOffset;
-            this.def_yOffset = yOffset;
-            this.myMap = map;
+    //constructor
+    //takes x and y offset values
+    public AsteroidCanvas( double xOffset, double yOffset, MyMap map) {
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
+        this.def_xOffset = xOffset;
+        this.def_yOffset = yOffset;
+        this.myMap = map;
 
-            asteroidTimer = new Timer(speed, new AsteroidListener(this, myMap));
-        }
+        asteroidTimer = new Timer(speed, new AsteroidListener(this, myMap));
+    }
 
-        //setter function that sets x and y offsets
-        public void set_offset(double xOffset, double yOffset){
-            this.xOffset = xOffset;
-            this.yOffset = yOffset;
-        }
+    //returns the xOffset
+    public double get_xOffset(){
+        return this.xOffset;
+    }
 
-        //returns the xOffset
-        public double get_xOffset(){
-            return this.xOffset;
-        }
+    //returns the y Offset
+    public double get_yOffset(){
+        return this.yOffset;
+    }
 
-        //returns the y Offset
-        public double get_yOffset(){
-            return this.yOffset;
-        }
+    //returns the name of object
+    public String get_name(){
+        return name;
+    }
 
-        //returns the name of object
-        public String get_name(){
-            return name;
-        }
+    //returns the speed of object
+    public int get_speed(){
+        return speed;
+    }
 
-        //returns the speed of object
-        public int get_speed(){
-            return speed;
-        }
+    public void start(){
+        asteroidTimer.start();
+    }
+    public void stop(){
+        asteroidTimer.stop();
+    }
+    public void forward(int forward){
+        asteroidTimer.setDelay(speed / forward);
+    }
 
-        public void start(){
-            asteroidTimer.start();
-        }
-        public void stop(){
-            asteroidTimer.stop();
-        }
-        public void forward(int forward){
-            asteroidTimer.setDelay(speed / forward);
-        }
+    //rewinds the asteroid back 2 times the speed
+    public void rewind() {
+        asteroidTimer.setDelay(speed);
+        yOffset += (2 * move);
+    }
 
-        //rewinds the asteroid back 2 times the speed
-        public void rewind() {
-            asteroidTimer.setDelay(speed);
-            yOffset += (2 * move);
-        }
-    
-        /* draw 
-         * parameters include a 2d graphics and dimensions of drawing canvas
-         * returns nothing
-        */
-        public void draw(Graphics2D g, Dimension canvasSize) {
+    /* draw 
+        * parameters include a 2d graphics and dimensions of drawing canvas
+        * returns nothing
+    */
+    public void draw(Graphics2D g, Dimension canvasSize) {
+        
+        //calculating the base size of asteroid from canvasSize and to scale
+        int baseSize = Math.min(canvasSize.width, canvasSize.height);
+        int asteroidSize = baseSize /(int) (2 * scale); 
+
+        //positioning on map based on given offset values
+        int centerX = (int) (canvasSize.width / xOffset);
+        int centerY = (int) (canvasSize.height / yOffset);
+
+        int numSides = 13;
+        double theta = 2 * Math.PI / numSides; //getting equal angles/side
+
+        //array to store c and y coordinates
+        int[] xPoints = new int[numSides];
+        int[] yPoints = new int[numSides];
+
+        // static offsets for each point to keep the shape consistent
+        int[] offsets = {
+            (int)(0.1 * asteroidSize),
+            (int)(0.15 * asteroidSize),
+            (int)(0.12 * asteroidSize),
+            (int)(0.18 * asteroidSize),
+            (int)(0.1 * asteroidSize),
+            (int)(0.14 * asteroidSize),
+            (int)(0.16 * asteroidSize),
+            (int)(0.11 * asteroidSize),
+            (int)(0.15 * asteroidSize),
+            (int)(0.13 * asteroidSize),
+            (int)(0.17 * asteroidSize),
+            (int)(0.12 * asteroidSize),
+            (int)(0.14 * asteroidSize)
+        };
+
+        //finding the x and y positions
+        for (int i = 0; i < numSides; i++) {
+            double angle = theta * i; //angle for each side
             
-            //calculating the base size of asteroid from canvasSize and to scale
-            int baseSize = Math.min(canvasSize.width, canvasSize.height);
-            int asteroidSize = baseSize /(int) (2 * scale); 
-    
-            //positioning on map based on given offset values
-            int centerX = (int) (canvasSize.width / xOffset);
-            int centerY = (int) (canvasSize.height / yOffset);
-
-            int numSides = 13;
-            double theta = 2 * Math.PI / numSides; //getting equal angles/side
-
-            //array to store c and y coordinates
-            int[] xPoints = new int[numSides];
-            int[] yPoints = new int[numSides];
-
-            // static offsets for each point to keep the shape consistent
-            int[] offsets = {
-                (int)(0.1 * asteroidSize),
-                (int)(0.15 * asteroidSize),
-                (int)(0.12 * asteroidSize),
-                (int)(0.18 * asteroidSize),
-                (int)(0.1 * asteroidSize),
-                (int)(0.14 * asteroidSize),
-                (int)(0.16 * asteroidSize),
-                (int)(0.11 * asteroidSize),
-                (int)(0.15 * asteroidSize),
-                (int)(0.13 * asteroidSize),
-                (int)(0.17 * asteroidSize),
-                (int)(0.12 * asteroidSize),
-                (int)(0.14 * asteroidSize)
-            };
-
-            //finding the x and y positions
-            for (int i = 0; i < numSides; i++) {
-                double angle = theta * i; //angle for each side
-                
-                //using the formula r * cos(angle) to find coordinate
-                //then adding the center coordinate for displacement
-                xPoints[i] = centerX + (int)(Math.cos(angle) * (asteroidSize - offsets[i]));
-                yPoints[i] = centerY + (int)(Math.sin(angle) * (asteroidSize - offsets[i]));
-            }
-
-
-            g.setColor(new Color(65, 30, 3));
-            g.fillPolygon(xPoints, yPoints, numSides);
-
-            //adding name to drawing ---> depends on Name class
-            FontMetrics fm = g.getFontMetrics();
-            int textWidth = fm.stringWidth(name);
-            int textX = centerX - textWidth / 2;
-            int textY = centerY + asteroidSize/2 + fm.getHeight();
-            Name drName = new Name(textX, textY, name, 10);
-            drName.draw(g);
+            //using the formula r * cos(angle) to find coordinate
+            //then adding the center coordinate for displacement
+            xPoints[i] = centerX + (int)(Math.cos(angle) * (asteroidSize - offsets[i]));
+            yPoints[i] = centerY + (int)(Math.sin(angle) * (asteroidSize - offsets[i]));
         }
+
+
+        g.setColor(new Color(65, 30, 3));
+        g.fillPolygon(xPoints, yPoints, numSides);
+        
+        //find the highest y value
+        this.highestY = Integer.MAX_VALUE;
+        for (int i = 0; i < numSides; i++) {
+            int currentY = centerY + (int)(Math.sin(theta * i) * (asteroidSize - offsets[i]));
+            if (currentY < highestY) {
+                this.highestY = currentY;
+            }
+        }
+
+        //adding name to drawing ---> depends on Name class
+        FontMetrics fm = g.getFontMetrics();
+        int textWidth = fm.stringWidth(name);
+        int textX = centerX - textWidth / 2;
+        int textY = centerY + asteroidSize/2 + fm.getHeight();
+        Name drName = new Name(textX, textY, name, 10);
+        drName.draw(g);
+    }
+
+    public boolean isWithinMap(int y, int dimaeter){
+        int bottomY = y + dimaeter;
+        
+        if(highestY > bottomY){
+            //beyond map boundary
+            return false;
+        }
+        return true;
+    }
 
     
     /* updateLocation
