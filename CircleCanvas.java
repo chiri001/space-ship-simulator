@@ -31,8 +31,8 @@ public class CircleCanvas implements DrawingCanvas {
     public String get_name(){
         return "";
     }
-    public double get_speed(){
-        return yOffset;
+    public int get_speed(){
+        return 0;
     }
 
     /* draw 
@@ -56,5 +56,23 @@ public class CircleCanvas implements DrawingCanvas {
         int map_info[] = {x, y, diameter}; //store details in array to return
 
         return map_info;
+    }
+    @Override
+    public void start() {
+    }
+    @Override
+    public void stop() {
+    }
+    @Override
+    public void forward(int forward) {
+    }
+    @Override
+    public void rewind() {
+    }
+    @Override
+    public void reset() {
+    }
+    @Override
+    public void move_item(String direction) {
     }
 }

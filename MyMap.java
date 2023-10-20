@@ -11,6 +11,8 @@
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
+import java.util.ArrayList;
+
 import javax.swing.*;
 
 //My map class that is incharge of handling elements in the map
@@ -23,52 +25,42 @@ class MyMap extends JPanel implements ObjectListener {
     private SpaceDebriCanvas debriCanvas;
     private MySpaceship mySpaceShip;
 
-
-    //timer variables
-    private Timer timer;
-    private Timer asteroidTimer;
-    private Timer shipTimer;
-    private Timer planetTimer;
-    private Timer sound_alarm;
-
     //variable to store the the rectangle where object can be displayed 
     //when clicked
     private ObjectInformation objectInfoInstance;
 
     //variable used by timer to set speed of objects on map
-    private int starting_speed = 200;
+    private int forward = 2;
+    private boolean isSimulationStopped = false;
+    private ArrayList<DrawingCanvas> allDrawables = new ArrayList<>();
 
     public MyMap() {
         //create drawings
         this.circleCanvas = new CircleCanvas();
-        this.spaceShipCanvas = new SpaceShipCanvas(this, 3, 3);
+
+        this.spaceShipCanvas = new SpaceShipCanvas(this, 3, 3, this);
         this.addMouseListener(spaceShipCanvas);
-        this.mySpaceShip = new MySpaceship(this);
+        allDrawables.add(spaceShipCanvas);
+
+        this.mySpaceShip = new MySpaceship(this, 2, 2, this);
         this.addMouseListener(mySpaceShip);
-        this.planetCanvas = new PlanetCanvas(this, 1.5, 4, 5);
+        allDrawables.add(mySpaceShip);
+
+        this.planetCanvas = new PlanetCanvas(this, 1.5, 4, 5, this);
         this.addMouseListener(planetCanvas);
-        this.pointerCanvas = new PointerCanvas();
-        this.asteroidCanvas = new AsteroidCanvas(2, 4.5);
-        this.debriCanvas = new SpaceDebriCanvas();
+        allDrawables.add(planetCanvas);
 
+        this.pointerCanvas = new PointerCanvas(this);
+        allDrawables.add(pointerCanvas);
 
+        this.asteroidCanvas = new AsteroidCanvas(2, 4.5, this);
+        allDrawables.add(asteroidCanvas);
 
-        //initialize timers
-        //timer updates drawing position upon expiration
-        timer = new Timer(50, 
-                            new PointerListener(pointerCanvas, this));
+        this.debriCanvas = new SpaceDebriCanvas(this);
+        allDrawables.add(debriCanvas);
 
-        asteroidTimer = new Timer(starting_speed, 
-                                    new AsteroidListener(asteroidCanvas, this));
-
-        planetTimer = new Timer(2 * starting_speed, 
-                                new PlanetListener(planetCanvas, this));
-
-        shipTimer = new Timer(starting_speed / 2, 
-                                new ShipListener(spaceShipCanvas, this));
-        sound_alarm = new Timer(500, 
-                            new MySpaceshipListener(mySpaceShip, this));
         
+        start_simulation(); //start the simulation
     }
 
     //the function takes the rectangle that displays clicked drawings and
@@ -85,57 +77,108 @@ class MyMap extends JPanel implements ObjectListener {
 
     //starts simulation by starting the timer
     public void start_simulation() {
-        timer.start();
-        asteroidTimer.start();
-        planetTimer.start();
-        shipTimer.start();
+        for(DrawingCanvas drawing : allDrawables) {
+            drawing.start();
+        }
+        repaint();
+        isSimulationStopped = false;
     }
 
     //stops simulation by stopping the timer
     public void stop_simulation() {
-        timer.stop();
-        asteroidTimer.stop();
-        planetTimer.stop();
-        shipTimer.stop();
         stop_alarm();
+
+        for(DrawingCanvas drawing : allDrawables) {
+            drawing.stop();
+        }
+        repaint();
+        isSimulationStopped = true;
 
     }
 
     //functions stops alarm when called
     public void stop_alarm() {
-        mySpaceShip.reset_color();
-        sound_alarm.stop();
+        mySpaceShip.reset_alarm();
     }
 
     //forwards the simulation by updating speed
     public void forward_simulation() {
-        asteroidTimer.setDelay((starting_speed) / 2);
-        planetTimer.setDelay((2 * starting_speed) / 2);
-        shipTimer.setDelay((starting_speed /2) / 2);
+        
+        if(! isSimulationStopped) {
 
-        repaint();
+            for(DrawingCanvas drawing : allDrawables) {
+                drawing.forward(forward);
+            }
+
+            forward *= 2;
+
+            repaint();
+        }
     }
 
     //rewinds the simulation
     public void rewind_simulation() {
-        /*resets forward to default values */
-        asteroidTimer.setDelay(starting_speed);
-        planetTimer.setDelay(2 * starting_speed);
-        shipTimer.setDelay(starting_speed /2);
 
-        //calls drawings rewind to rewind program
-        asteroidCanvas.rewind();
-        planetCanvas.rewind();
-        spaceShipCanvas.rewind();
+        //reset all values
+        forward = 2;
+
+        for(DrawingCanvas drawing : allDrawables) {
+            drawing.rewind();
+        }
+
         repaint();
     }
+
 
     //activates my spaceship alarm when alarm button is clicked
     public void activate_alarm() {
-        sound_alarm.start();
+        mySpaceShip.sound_alarm();
         repaint();
     }
 
+    //the functions resets the screen with drawings at its initial position
+    public void reset_simulation() {
+        //stop all ongoing simulation
+        stop_simulation();
+
+        //reset all objects
+        for(DrawingCanvas drawing : allDrawables) {
+            drawing.reset();
+        }
+        //reset values
+        forward = 2;
+        
+        //repaint screen
+        repaint();
+    }
+
+    public void addDrawings(double x, double y, int satelites, String to_draw) {
+    
+        if(to_draw.equals("Planet")){
+            PlanetCanvas newPlanet = new PlanetCanvas(this, x, y, satelites, this);
+            allDrawables.add(newPlanet);
+        }
+        else if(to_draw.equals("Spaceship")){
+            SpaceShipCanvas newShip = new SpaceShipCanvas(this, x, y, this);
+            allDrawables.add(newShip);
+        }
+        else if(to_draw.equals("Asteroid")){
+            AsteroidCanvas newAsteroid = new AsteroidCanvas(x, y, this);
+            allDrawables.add(newAsteroid);
+        }
+
+        repaint();
+    }
+
+    public void move_items(String direction) {
+        if( ! isSimulationStopped) {
+
+            for(DrawingCanvas drawing : allDrawables) {
+                drawing.move_item(direction);
+            }
+        }
+        repaint();
+    }
     /* Paintcomponent
      * parameters is graphics to draw with
      * returns nothing
@@ -154,15 +197,12 @@ class MyMap extends JPanel implements ObjectListener {
         Ellipse2D clipMap = new Ellipse2D.Double(x, y, 2 * radius, 2 * radius);
         graphic_2d.setClip(clipMap); //setting new clip
 
-        //drawing my spaceship
-        mySpaceShip.set_offset(2, 2);
-        mySpaceShip.draw(graphic_2d, getSize());
-
-        //draw shapes using draw function in DrawingCanvas interface
-        spaceShipCanvas.draw(graphic_2d, getSize());
-        planetCanvas.draw(graphic_2d, getSize());
-        asteroidCanvas.draw(graphic_2d, getSize());
-        pointerCanvas.draw(graphic_2d, getSize());
-        debriCanvas.draw(graphic_2d, getSize());
+        //if drawings are widthin map boundary
+        for(DrawingCanvas drawing: allDrawables) {
+            //if(drawing.isWithinMap(x, y, 2 * radius, 2 * radius)){
+                //draw shapes using draw function in DrawingCanvas interface
+                drawing.draw(graphic_2d, getSize());
+            //}
+        }
     }
 }

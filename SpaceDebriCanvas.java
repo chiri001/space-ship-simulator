@@ -11,6 +11,8 @@
 import java.awt.*;
 import java.util.ArrayList;
 
+import javax.swing.Timer;
+
 
 public class SpaceDebriCanvas implements DrawingCanvas {
 
@@ -19,16 +21,27 @@ public class SpaceDebriCanvas implements DrawingCanvas {
     private double xOffset;
     private double yOffset;
     private int scale = 15;
-    private double speed = 1;
+    private double move = 0.05;
+    private int speed = 150;
+    private Timer debriTimer;
+    private MyMap myMap;
 
 
     private ArrayList<SpaceDebri> debriList = new ArrayList<>();
+    private ArrayList<SpaceDebri> debriDefPos = new ArrayList<>();
 
-    public SpaceDebriCanvas () {
+    public SpaceDebriCanvas (MyMap map) {
         for(int i = 0; i < population; i++) {
             //generates random offsets between 1.5 and 4.5 which is the map limits
             debriList.add(new SpaceDebri(Math.random() * 4.5 + 1.5, Math.random() * 4.5 + 1.5));
         }
+
+        for(SpaceDebri debri : debriList){
+            debriDefPos.add(new SpaceDebri(debri.get_offset_x(), debri.get_offset_y()));
+        }
+        this.myMap = map;
+
+        debriTimer = new Timer(speed, new SpaceDebriListener(this, myMap));
     }
 
     public void set_offset(double xOffset, double yOffset){
@@ -42,8 +55,20 @@ public class SpaceDebriCanvas implements DrawingCanvas {
     public String get_name(){
         return name;
     }
-    public double get_speed(){
+    public int get_speed(){
         return speed;
+    }
+
+    public void start() {
+        debriTimer.start();
+    }
+
+    public void stop() {
+        debriTimer.stop();
+    }
+
+    public void forward(int forward) {
+        debriTimer.setDelay(speed/forward);
     }
 
     public void draw(Graphics2D g, Dimension canvasSize) {
@@ -120,5 +145,60 @@ public class SpaceDebriCanvas implements DrawingCanvas {
      * updates location of the planet on the map
     */
     public void updateLocation() {
+        for(SpaceDebri debri : debriList){
+            debri.set_offsets(debri.get_offset_x() - move, debri.get_offset_y() - move);
+        }
     }
+
+    //rewinds the movement of the debri to its previous position
+    public void rewind() {
+        debriTimer.setDelay(speed);
+        for(SpaceDebri debri : debriList){
+            debri.set_offsets(debri.get_offset_x() + move, debri.get_offset_y() + move);
+        }
+    }
+
+    //resets value to initial values
+    public void reset() {
+
+        //reset to initial values
+        debriTimer.setDelay(speed);
+        for (int i = 0; i < debriList.size(); i++) {
+            SpaceDebri originalDebri = debriDefPos.get(i); //get original ofst
+            SpaceDebri currentDebri = debriList.get(i); //get curr offset
+    
+            //set offset values of debri list to default values
+            currentDebri.set_offsets(originalDebri.get_offset_x(), originalDebri.get_offset_y());
+        }
+    }
+
+    //moves the drawing in the direction passed
+    //parameter is the direction to move the item on the map
+    public void move_item(String direction) {
+        if(direction.equals("LEFT")) {
+            //adjust to left by move
+            for(SpaceDebri debri : debriList){
+                debri.set_offsets(debri.get_offset_x() - move, debri.get_offset_y());
+            }
+        } 
+        else if(direction.equals("UP")){
+            //adjust to up by move
+            for(SpaceDebri debri : debriList){
+                debri.set_offsets(debri.get_offset_x(), debri.get_offset_y() - move);
+            }
+        }
+        else if(direction.equals("RIGHT")){
+            //adjust to right by move
+            for(SpaceDebri debri : debriList){
+                debri.set_offsets(debri.get_offset_x() + move, debri.get_offset_y());
+            }
+        }
+        else if(direction.equals("DOWN")){
+            //adjust to down by move
+            for(SpaceDebri debri : debriList){
+                debri.set_offsets(debri.get_offset_x(), debri.get_offset_y() + move);
+            }
+        }
+    }
+    
 }

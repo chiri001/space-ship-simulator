@@ -21,6 +21,11 @@ public class SpaceDebri {
         this.yOffset = offset_y;
     }
 
+    public void set_offsets(double offset_x, double offset_y) {
+        this.xOffset = offset_x;
+        this.yOffset = offset_y;
+    }
+
     //getter
     //returns x_offfset
     public double get_offset_x() {

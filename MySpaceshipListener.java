@@ -17,13 +17,11 @@ import java.awt.event.ActionListener;
 public class MySpaceshipListener implements ActionListener {
     
     private MySpaceship spaceShipCanvas;
-    private MyMap myMap;
 
     /* constructor
     */
-    public MySpaceshipListener(MySpaceship pCanvas, MyMap map) {
+    public MySpaceshipListener(MySpaceship pCanvas) {
         this.spaceShipCanvas = pCanvas;
-        this.myMap = map;
     }
 
     /*
@@ -31,6 +29,5 @@ public class MySpaceshipListener implements ActionListener {
     */
     public void actionPerformed(ActionEvent e) {
         spaceShipCanvas.activate_alarm();
-        myMap.repaint(); //redraw the entire map
     }
 }

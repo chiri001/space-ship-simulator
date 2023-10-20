@@ -18,6 +18,8 @@ public class ObjectBoxCanvas implements DrawingCanvas {
     private int xOffset;
     private int yOffset;
     private int padding = 15;
+    private int x = 10;
+    private int y = 10;
 
     public void set_offset(double xOffset, double yOffset){
     }
@@ -31,7 +33,7 @@ public class ObjectBoxCanvas implements DrawingCanvas {
     public String get_name(){
         return "";
     }
-    public double get_speed(){
+    public int get_speed(){
         return 0;//doesn't move
     }
 
@@ -46,27 +48,12 @@ public class ObjectBoxCanvas implements DrawingCanvas {
         
         //checks that object was clicked to proceed
         if (obj != null) {
-
-            //store initial offset values of the drawing to be displayed
-            double initial_xOffset = obj.get_xOffset();
-            double initial_yOffset = obj.get_yOffset();
-
-            //sets the drawing on top of the display box
-            obj.set_offset(2, 4);
-
-            //draws with new offset values relying on drawing implementation
-            //of the type. i.e spaceship relies on Spaceshipcanvas
-            obj.draw(g, new Dimension(length, width));
-
-            //set original offsets back
-            obj.set_offset(initial_xOffset, initial_yOffset);
-
             //drawing text to be displayed on object information screen
             g.setColor(Color.black);
             String name_info = "Name : " + obj.get_name();
             String speed_info = "Speed : " + obj.get_speed() + " M/h";
-            g.drawString(name_info, 20, 80);
-            g.drawString(speed_info, 20, 100);
+            g.drawString(name_info,length / 3, width/3);
+            g.drawString(speed_info,length / 3, width/2);
         }
     }
     
@@ -79,9 +66,31 @@ public class ObjectBoxCanvas implements DrawingCanvas {
         //add padding to rectangle
         int length = canvasSize.width - padding;
         int width = canvasSize.height - padding;
-        int x = 10;
-        int y = 10;
 
         g.drawRect(x, y, length, width);
+    }
+
+    @Override
+    public void start() {
+    }
+
+    @Override
+    public void stop() {
+    }
+
+    @Override
+    public void forward(int forward) {
+    }
+
+    @Override
+    public void rewind() {
+    }
+
+    @Override
+    public void reset() {
+    }
+
+    @Override
+    public void move_item(String direction) {
     }
 }

@@ -36,24 +36,6 @@ public class MyButton extends JButton implements ActionListener{
 
         //switch case statement to check which button was clicked
         switch(command) {
-            case "RESET":
-                System.out.println("reset button was clicked");
-                break;
-            case "NEW PATH":
-                System.out.println("new path button was clicked");
-                break;
-            case "UP":
-                System.out.println("up button was clicked");
-                break;
-            case "DOWN":
-                System.out.println("down button was clicked");
-                break;
-            case "LEFT":
-                System.out.println("left button was clicked");
-                break;
-            case "RIGHT":
-                System.out.println("right button was clicked");
-                break;
             case "Z(+)":
                 System.out.println("zoomin button was clicked");
                 break;

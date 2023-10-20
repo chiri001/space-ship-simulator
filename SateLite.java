@@ -48,8 +48,8 @@ public class SateLite implements DrawingCanvas {
     public String get_name(){
         return name;
     }
-    public double get_speed(){
-        return speed;
+    public int get_speed(){
+        return (int)speed;
     }
 
     /* draw 
@@ -117,5 +117,29 @@ public class SateLite implements DrawingCanvas {
         if(angle > 2 * Math.PI){
             angle -= 2 * Math.PI;
         }
+    }
+
+    @Override
+    public void start() {
+    }
+
+    @Override
+    public void stop() {
+    }
+
+    @Override
+    public void forward(int forward) {
+    }
+
+    @Override
+    public void rewind() {
+    }
+
+    @Override
+    public void reset() {
+    }
+
+    @Override
+    public void move_item(String direction) {
     }
 }

@@ -10,20 +10,32 @@
 
 import java.awt.*;
 
+import javax.swing.Timer;
+
 //asteroid class that draws an asteroid
 public class AsteroidCanvas implements DrawingCanvas {
 
         private double xOffset;
         private double yOffset;
         private String name = "Asteroid";
-        private double speed = 0.05;
+        private double move = 0.05;
         private int scale = 15;
+        private double def_xOffset;
+        private double def_yOffset;
+        private Timer asteroidTimer;
+        private int speed = 200;
+        private MyMap myMap;
 
         //constructor
         //takes x and y offset values
-        public AsteroidCanvas( double xOffset, double yOffset) {
+        public AsteroidCanvas( double xOffset, double yOffset, MyMap map) {
             this.xOffset = xOffset;
             this.yOffset = yOffset;
+            this.def_xOffset = xOffset;
+            this.def_yOffset = yOffset;
+            this.myMap = map;
+
+            asteroidTimer = new Timer(speed, new AsteroidListener(this, myMap));
         }
 
         //setter function that sets x and y offsets
@@ -48,13 +60,24 @@ public class AsteroidCanvas implements DrawingCanvas {
         }
 
         //returns the speed of object
-        public double get_speed(){
+        public int get_speed(){
             return speed;
+        }
+
+        public void start(){
+            asteroidTimer.start();
+        }
+        public void stop(){
+            asteroidTimer.stop();
+        }
+        public void forward(int forward){
+            asteroidTimer.setDelay(speed / forward);
         }
 
         //rewinds the asteroid back 2 times the speed
         public void rewind() {
-            yOffset += (2 * speed);
+            asteroidTimer.setDelay(speed);
+            yOffset += (2 * move);
         }
     
         /* draw 
@@ -126,6 +149,37 @@ public class AsteroidCanvas implements DrawingCanvas {
     */
     public void updateLocation() {
 
-        yOffset -= speed;
+        yOffset -= move;
+    }
+
+    //the functions resets the location of the asteroid on the map
+    public void reset() {
+        //reset to default values
+        asteroidTimer.setDelay(speed);
+        yOffset = def_yOffset;
+        xOffset = def_xOffset;
+    }
+
+    //moves the drawing in the direction passed
+    //parameter is the direction to move the item on the map
+    public void move_item(String direction) {
+
+        if(direction.equals("LEFT")) {
+            //adjust to left by move
+            xOffset -= move;
+        } 
+        else if(direction.equals("UP")){
+            //adjust to up by move
+            yOffset -= move;
+        }
+        else if(direction.equals("RIGHT")){
+            //adjust to right by move
+            xOffset += move;
+        }
+        else if(direction.equals("DOWN")){
+            //adjust to down by move
+            yOffset += move;
+        }
+        
     }
 }

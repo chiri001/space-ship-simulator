@@ -1,6 +1,8 @@
 
 import java.awt.*;
 
+import javax.swing.Timer;
+
 //pointer hand to simulate a rotating radar
 class PointerCanvas implements DrawingCanvas {
 
@@ -8,6 +10,13 @@ class PointerCanvas implements DrawingCanvas {
     private double xOffset = 2;
     private double yOffset = 2;
     private int padding = 15;
+    private Timer ptimer;
+    private MyMap myMap;
+
+    public PointerCanvas(MyMap map) {
+        this.myMap = map;
+        ptimer = new Timer(50, new PointerListener(this, myMap));
+    }
 
     public void set_offset(double xOffset, double yOffset){
     }
@@ -20,8 +29,21 @@ class PointerCanvas implements DrawingCanvas {
     public String get_name(){
         return "";
     }
-    public double get_speed(){
-        return yOffset;
+    public int get_speed(){
+        return 0;
+    }
+
+    public void start(){
+        ptimer.start();
+    }
+    public void stop(){
+        ptimer.stop();
+    }
+    public void forward(int forward){
+    }
+    public void rewind(){
+    }
+    public void move_item(){
     }
 
     /* draw 
@@ -56,5 +78,10 @@ class PointerCanvas implements DrawingCanvas {
     */
     public void updatePointer() {
         pointerAngle += Math.toRadians(2); //update angle by 2 degrees
+    }
+
+    public void reset() {
+    }
+    public void move_item(String direction) {
     }
 }

@@ -19,5 +19,11 @@ public interface DrawingCanvas {
     double get_xOffset();
     double get_yOffset();
     String get_name();
-    double get_speed();
+    int get_speed();
+    void start();
+    void stop();
+    void forward(int forward);
+    void rewind();
+    void reset();
+    void move_item(String direction);
 }

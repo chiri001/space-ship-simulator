@@ -25,9 +25,6 @@ public class Main extends JFrame{
         //set up the window's layout
         setSize(800, 700);
 
-        //setting a minmum screen to limit too much resizing of screen
-        setMinimumSize(new Dimension(600, 500)); 
-
         /*ensure the program closes on exit */
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 

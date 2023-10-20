@@ -14,6 +14,8 @@ import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
+import javax.swing.Timer;
+
 
 //planetCanvas Class that draws a DrawingCanvas
 public class PlanetCanvas implements DrawingCanvas,  MouseListener{
@@ -26,15 +28,23 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
     private ObjectListener lstn;
     private int population;
     private int scale = 15;
-    private double speed = 0.05;
+    private double move = 0.05;
+    private int speed = 600;
+    private double def_xOffset;
+    private double def_yOffset;
+    private Timer planetTimer;
+    private MyMap myMap;
 
     private ArrayList<SateLite> sateLiteList = new ArrayList<>();
 
-    public PlanetCanvas(ObjectListener lstn, double xOffset, double yOffset, int satelites) {
+    public PlanetCanvas(ObjectListener lstn, double xOffset, double yOffset, int satelites, MyMap map) {
         this.lstn = lstn;
         this.xOffset = xOffset;
         this.yOffset = yOffset;
+        this.def_xOffset = xOffset;
+        this.def_yOffset = yOffset;
         this.population = satelites;
+        this.myMap = map;
 
         int orbitRadius = diameter;
         double angle = 2 * Math.PI / population; //divide angles equally
@@ -44,6 +54,8 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
             sl.set_angle(i * angle); //sets angle for each satelite from planet
             sateLiteList.add(sl);
         }
+
+        planetTimer = new Timer(speed, new PlanetListener(this, myMap));
     }
 
     public void set_offset(double xOffset, double yOffset) {
@@ -63,8 +75,20 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
         return this.name;
     }
 
-    public double get_speed(){
+    public int get_speed(){
         return this.speed;
+    }
+
+    public void start() {
+        planetTimer.start();
+    }
+
+    public void stop() {
+        planetTimer.stop();
+    }
+
+    public void forward(int forward) {
+        planetTimer.setDelay(speed/forward);
     }
 
     /* draw 
@@ -101,7 +125,7 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
 
     //updates location of planet on map when called
     public void updateLocation() {
-        yOffset -= speed;
+        yOffset -= move;
 
         //update position of satelite
         for(SateLite sate_lite : sateLiteList) {
@@ -109,9 +133,41 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
         }
     }
 
+        //moves the drawing in the direction passed
+    //parameter is the direction to move the item on the map
+    public void move_item(String direction) {
+
+        if(direction.equals("LEFT")) {
+            //adjust to left by move
+            xOffset -= move;
+        } 
+        else if(direction.equals("UP")){
+            //adjust to up by move
+            yOffset -= move;
+        }
+        else if(direction.equals("RIGHT")){
+            //adjust to right by move
+            xOffset += move;
+        }
+        else if(direction.equals("DOWN")){
+            //adjust to down by move
+            yOffset += move;
+        }
+        
+    }
+    
+    //the functions resets the location of the plaent on the map
+    public void reset() {
+        //reset to default values
+        planetTimer.setDelay(speed);
+        yOffset = def_yOffset;
+        xOffset = def_xOffset;
+    }
+
     //rewinds planet movement when called
     public void rewind() {
-        yOffset += 2 * speed;
+        planetTimer.setDelay(speed);
+        yOffset += 2 * move;
     }
 
     //mouse eventlistener for planet drawing

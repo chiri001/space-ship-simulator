@@ -11,6 +11,8 @@
 import java.awt.*;
 import java.awt.event.MouseListener;
 
+import javax.swing.Timer;
+
 import java.awt.event.MouseEvent;
 
 //SpaceShipCanvas Class that draws a spaceship
@@ -20,13 +22,23 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
     private double yOffset;
     private String name = "Spaceship";
     private ObjectListener lstn;
-    private double speed = 0.02;
+    private double move = 0.02;
+    private int speed = 1000;
     private int scale = 15;
+    private double def_xOffset;
+    private double def_yOffset;
+    private Timer shipTimer;
+    private MyMap myMap;
 
-    public SpaceShipCanvas(ObjectListener lstn, double xOffset, double yOffset) {
+    public SpaceShipCanvas(ObjectListener lstn, double xOffset, double yOffset, MyMap map) {
         this.lstn = lstn;
         this.xOffset = xOffset;
         this.yOffset = yOffset;
+        this.def_xOffset = xOffset;
+        this.def_yOffset = yOffset;
+        this.myMap = map;
+
+        shipTimer = new Timer(speed, new ShipListener(this, myMap));
     }
 
     public double get_xOffset(){
@@ -38,13 +50,23 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
     public String get_name(){
         return name;
     }
-    public double get_speed(){
+    public int get_speed(){
         return speed;
     }
 
     public void set_offset(double xOffset, double yOffset){
         this.xOffset = xOffset;
         this.yOffset = yOffset;
+    }
+
+    public void start() {
+        shipTimer.start();
+    }
+    public void stop() {
+        shipTimer.stop();
+    }
+    public void forward(int forward){
+        shipTimer.setDelay(speed/forward);
     }
 
     /* draw 
@@ -97,6 +119,9 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
         g.setColor(Color.black);
         g.fillPolygon(xPoints, yPoints, 7);
 
+        // this.x = 
+        // this.y = 
+
         //draw the name of drawing
         FontMetrics fm = g.getFontMetrics();
         int textWidth = fm.stringWidth(name);
@@ -110,13 +135,52 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
 
     //updates location of the planet
     public void updateLocation() {
-        yOffset -= speed;
+        yOffset -= move;
     }
 
     //rewinds planet movement
     public void rewind() {
-        yOffset += 2 * speed;
+        shipTimer.setDelay(speed);
+        yOffset += 2 * move;
     }
+
+    //the functions resets the location of the plaent on the map
+    public void reset() {
+        //reset to initial values
+        shipTimer.setDelay(speed);
+        yOffset = def_yOffset;
+        xOffset = def_xOffset;
+    }
+
+    //moves the drawing in the direction passed
+    //parameter is the direction to move the item on the map
+    public void move_item(String direction) {
+
+        if(direction.equals("LEFT")) {
+            //adjust to left by move
+            xOffset -= move;
+        } 
+        else if(direction.equals("UP")){
+            //adjust to up by move
+            yOffset -= move;
+        }
+        else if(direction.equals("RIGHT")){
+            //adjust to right by move
+            xOffset += move;
+        }
+        else if(direction.equals("DOWN")){
+            //adjust to down by move
+            yOffset += move;
+        }
+        
+    }
+
+    // //function to check whether the drawing is within map boundary
+    // public boolean isWithinMap(int x, int y, int width, int height) {
+
+    //     return this.x + this.width > x &&
+        
+    // }
 
     //function to handle when drawing is clicked
     public void mouseClicked(MouseEvent e) {

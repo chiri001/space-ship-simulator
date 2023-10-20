@@ -12,18 +12,18 @@ import java.awt.event.ActionEvent;
 
 //the end button is the button responsible for ending the simulation
 //it is a subclass of Mybutton
-class EndButton extends MyButton {
+class StopButton extends MyButton {
 
     private MyMap myMap;
 
-    public EndButton(String label, MyMap map){
+    public StopButton(String label, MyMap map){
         super(label);
         this.myMap = map;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(get_button_name().equals("END")) {
+        if(get_button_name().equals("STOP")) {
             //end button should stop the simulation
             myMap.stop_simulation();
 

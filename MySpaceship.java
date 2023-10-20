@@ -12,6 +12,8 @@ import java.awt.*;
 
 import java.awt.event.MouseEvent;
 
+import javax.swing.Timer;
+
 //draws a spaceship that can be controlled in the simulation
 public class MySpaceship extends SpaceShipCanvas{
 
@@ -22,11 +24,16 @@ public class MySpaceship extends SpaceShipCanvas{
     private boolean isAlarmActivated = false;
     private int scale = 15;
     private double speed = 1;
+    private Timer alarmTimer;
 
     //constructor
     //takes an Objectlistener for the ship
-    public MySpaceship(ObjectListener lstn) {
-        super(lstn, 2, 2);
+    public MySpaceship(ObjectListener lstn, double xOffset, double yOffset, MyMap map) {
+        super(lstn, xOffset, yOffset, map);
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
+
+        alarmTimer = new Timer(500, new MySpaceshipListener(this));
     }
 
     public double get_xOffset(){
@@ -38,13 +45,11 @@ public class MySpaceship extends SpaceShipCanvas{
     public String get_name(){
         return name;
     }
-    public double get_speed(){
-        return speed;
+    public int get_speed(){
+        return 0;
     }
 
     public void set_offset(double xOffset, double yOffset){
-        this.xOffset = 2;
-        this.yOffset = 2;
     }
 
     /* draw 
@@ -106,7 +111,14 @@ public class MySpaceship extends SpaceShipCanvas{
         drName.draw(g);
     }
 
+    public void sound_alarm() {
+        alarmTimer.start();
+    }
 
+    public void reset_alarm() {
+        alarmTimer.stop();
+        reset_color();
+    }
     //funtion activates the alarm of the ship when alarm button is clicked
     public void activate_alarm(){
         if(!isAlarmActivated){
