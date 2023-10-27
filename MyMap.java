@@ -36,6 +36,9 @@ class MyMap extends JPanel {
     private ArrayList<String> newDrawings = new ArrayList<>();
     private ArrayList<Explosion> explosions = new ArrayList<>();
     private ArrayList<DrawingCanvas> collided = new ArrayList<>();
+
+    private boolean myShipExploded  = false;
+    private ScorePanel score_panel;
     
     private Timer drawing_generator_timer;
 
@@ -89,6 +92,7 @@ class MyMap extends JPanel {
 
         isSimulationStopped = false;
         repaint();
+        check_game_state();
         
     }
 
@@ -107,11 +111,14 @@ class MyMap extends JPanel {
                     Area area1 = new Area(object.get_position()); 
                     area1.intersect(area2);
 
-                    if(! area1.isEmpty()){
+                    if(! area1.isEmpty() ){  
                         //handle collission
-                            explode(object, object2);
-                            return true;
+
+                        if(object.get_name() == "Benatar" || object2.get_name() == "Benatar")
+                            myShipExploded = true;
                         
+                        explode(object, object2);
+                        return true;
                     }
                 }
         }
@@ -143,6 +150,7 @@ class MyMap extends JPanel {
         }
 
         drawing_generator_timer.stop();
+        score_panel.stop_destination_timer();
         isSimulationStopped = true;
 
         repaint();
@@ -165,6 +173,7 @@ class MyMap extends JPanel {
             forward *= 2; //increases speed by multiples of 2
 
             repaint();
+            check_game_state();
         }
     }
 
@@ -179,6 +188,7 @@ class MyMap extends JPanel {
         }
 
         repaint();
+        check_game_state();
     }
 
 
@@ -186,6 +196,7 @@ class MyMap extends JPanel {
     public void activate_alarm() {
         mySpaceShip.sound_alarm();
         repaint();
+        check_game_state();
     }
 
     //the functions resets the screen with drawings at its initial position
@@ -209,6 +220,7 @@ class MyMap extends JPanel {
         
         //repaint screen
         repaint();
+        check_game_state();
     }
 
     //functions initializes timer for randomizing generation of new drawings
@@ -227,7 +239,7 @@ class MyMap extends JPanel {
 
         //generate a random offset between 1 and 5 so that it is within viewprt
         double x_offset = 1 + rand.nextDouble() * 5; //appear anywhere on x axis
-        double y_offset = 5 + rand.nextDouble(); //appear top of map
+        double y_offset = 6 + rand.nextDouble(); //appear top of map
         int satelite = 0;
 
         if(newDrawings.get(index).equals("Planet")){
@@ -237,6 +249,20 @@ class MyMap extends JPanel {
         //call add drawings to add item to map
         addDrawings(x_offset, y_offset, satelite, newDrawings.get(index));
 
+    }
+
+    public void set_score_timer(ScorePanel score_panel){
+        this.score_panel = score_panel;
+        score_panel.start_destination_timer();
+    }
+
+    public void check_game_state() {
+        if(myShipExploded) {
+            //end game if myship exploded
+            simulation_over end_sim = new simulation_over("FAILURE", 
+                                            this);
+            end_sim.showMessage();
+        }
     }
 
     //function is responsible for adding drawings to the map
@@ -269,6 +295,7 @@ class MyMap extends JPanel {
             }
         }
         repaint();
+        check_game_state();
     }
 
     //function is responsible for moving items in a given direction
@@ -281,6 +308,7 @@ class MyMap extends JPanel {
             }
         }
         repaint();
+        check_game_state();
     }
     /* Paintcomponent
      * parameters is graphics to draw with

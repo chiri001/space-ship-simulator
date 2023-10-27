@@ -1,8 +1,7 @@
-import java.awt.GridLayout;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
-import javax.swing.Timer;
 
 import javax.swing.*;
 
@@ -12,14 +11,16 @@ public class ScorePanel extends JPanel {
     private JComboBox<String> destinations;
     private Timer destination_timer;
     private JLabel distLabel;
+    private MyMap myMap;
 
 
     //constructore 
-    public ScorePanel() {
+    public ScorePanel(MyMap map) {
 
+        this.myMap = map;
 
         //initialize destinations
-        distanceMap.put("Andromeda Galaxy (M31)", 60);
+        distanceMap.put("Andromeda Galaxy (M31)", 10);
         distanceMap.put("Triangulum Galaxy (M33):", 120);
         distanceMap.put("Messier 94 (M94)", 180);
         distanceMap.put("Messier 81 (M81, Bode's Galaxy)", 240);
@@ -46,17 +47,22 @@ public class ScorePanel extends JPanel {
                 decrement_distance();
             }
         });
-
-        //start timer
-        destination_timer.start();
-
     }
     
     private void update_distance() {
+        
         String selectedDestination = (String) destinations.getSelectedItem();
         int distance = distanceMap.get(selectedDestination); //get dist to dest
         //show distance to destination
         distLabel.setText(distance + "LY");
+    }
+
+    public void start_destination_timer() {
+        destination_timer.start();
+    }
+
+    public void stop_destination_timer() {
+        destination_timer.stop();
     }
 
     private void decrement_distance() {
@@ -70,6 +76,12 @@ public class ScorePanel extends JPanel {
             //update distance to location
             distanceMap.put(selectedDestination, currDist);
             update_distance();
+        } else {
+            //simulation over --> return success arrived destination
+            // give the class a message
+            simulation_over end_sim = new simulation_over("SUCCESS", 
+                                        myMap);
+            end_sim.showMessage();
         }
     }
 }

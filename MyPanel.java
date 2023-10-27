@@ -147,10 +147,11 @@ public class MyPanel extends JPanel {
         northPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
         //score panel
-        ScorePanel score_panel = new ScorePanel();
+        ScorePanel score_panel = new ScorePanel(map);
 
         //add to northpanel
         northPanel.add(score_panel);
+        map.set_score_timer(score_panel);
 
         //style for stating positition to put north panel
         GridBagConstraints northConstraints = new GridBagConstraints();
