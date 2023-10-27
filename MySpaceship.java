@@ -11,7 +11,6 @@
 import java.awt.*;
 
 import java.awt.event.MouseEvent;
-
 import javax.swing.Timer;
 
 //draws a spaceship that can be controlled in the simulation
@@ -25,13 +24,17 @@ public class MySpaceship extends SpaceShipCanvas{
     private int scale = 15;
     private int speed = 1000;
     private Timer alarmTimer;
+    private Polygon myShip;
+    private MyMap myMap;
 
     //constructor
     //takes an Objectlistener for the ship
-    public MySpaceship(ObjectListener lstn, double xOffset, double yOffset, MyMap map) {
-        super(lstn, xOffset, yOffset, map);
+    public MySpaceship(double xOffset, double yOffset, MyMap map) {
+        super(xOffset, yOffset, map);
         this.xOffset = xOffset;
         this.yOffset = yOffset;
+        this.myMap = map;
+        this.myMap.addMouseListener(this);
 
         alarmTimer = new Timer(500, new MySpaceshipListener(this));
     }
@@ -47,6 +50,14 @@ public class MySpaceship extends SpaceShipCanvas{
     }
     public int get_speed(){
         return speed;
+    }
+
+    public Shape get_position() {
+        return myShip;
+    }
+
+    public void removeMyListener() {
+        myMap.removeMouseListener(this);
     }
 
 
@@ -100,8 +111,9 @@ public class MySpaceship extends SpaceShipCanvas{
             centerY - spaceshipLength / 6 //bottom of left side
         };
 
+        myShip = new Polygon(xPoints, yPoints, 7);
         g.setColor(default_color);
-        g.fillPolygon(xPoints, yPoints, 7);
+        g.fillPolygon(myShip);
 
         //name of the drawing
         FontMetrics fm = g.getFontMetrics();
@@ -141,7 +153,12 @@ public class MySpaceship extends SpaceShipCanvas{
     }
 
     
+    //function to handle when drawing is clicked
     public void mouseClicked(MouseEvent e) {
+        if(myShip != null && myShip.contains(e.getPoint()))
+        {
+            ClickPopup popup = new ClickPopup(name, speed, this);
+        }
     }
 
     public void mousePressed(MouseEvent e) {
@@ -151,6 +168,14 @@ public class MySpaceship extends SpaceShipCanvas{
     public void mouseEntered(MouseEvent e) {
     }
     public void mouseExited(MouseEvent e) {
+    }
+
+    public void set_speed(int speed2) {
+        speed = speed2;
+    }
+
+    public void set_color(Color selected_color) {
+        default_color = selected_color;
     }
 }
 

@@ -21,7 +21,6 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
     private double xOffset;
     private double yOffset;
     private String name = "Spaceship";
-    private ObjectListener lstn;
     private double move = 0.09;
     private int speed = 1000;
     private int scale = 15;
@@ -30,14 +29,16 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
     private Timer shipTimer;
     private MyMap myMap;
     private int highestY;
+    private Polygon spaceShip;
+    private Color default_color = Color.black;
 
-    public SpaceShipCanvas(ObjectListener lstn, double xOffset, double yOffset, MyMap map) {
-        this.lstn = lstn;
+    public SpaceShipCanvas(double xOffset, double yOffset, MyMap map) {
         this.xOffset = xOffset;
         this.yOffset = yOffset;
         this.def_xOffset = xOffset;
         this.def_yOffset = yOffset;
         this.myMap = map;
+        this.myMap.addMouseListener(this);
 
         shipTimer = new Timer(speed, new ShipListener(this, myMap));
     }
@@ -63,6 +64,22 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
     }
     public void forward(int forward){
         shipTimer.setDelay(speed/forward);
+    }
+
+    public void set_speed(int speed2) {
+        speed = speed2;
+    }
+
+    public void set_color(Color selected_color) {
+        default_color = selected_color;
+    }
+
+    public Shape get_position() {
+        return spaceShip;
+    }
+
+    public void removeMyListener() {
+        myMap.removeMouseListener(this);
     }
 
     /* draw 
@@ -112,8 +129,9 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
             centerY - spaceshipLength / 6 //bottom of left side
         };
 
-        g.setColor(Color.black);
-        g.fillPolygon(xPoints, yPoints, 7);
+        spaceShip = new Polygon(xPoints, yPoints, 7);
+        g.setColor(default_color);
+        g.fillPolygon(spaceShip);
 
         this.highestY = centerX - spaceshipHeight / x_divisor; //highest point of ship
 
@@ -127,6 +145,7 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
         Name drName = new Name(textX, textY, name, 10);
         drName.draw(g);
     }
+
 
     public boolean isWithinMap(int y, int dimaeter){
         int bottomY = y + dimaeter;
@@ -154,6 +173,7 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
         shipTimer.setDelay(speed);
         yOffset = def_yOffset;
         xOffset = def_xOffset;
+        default_color = Color.black;
     }
 
     //moves the drawing in the direction passed
@@ -179,23 +199,11 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
         
     }
 
-    // //function to check whether the drawing is within map boundary
-    // public boolean isWithinMap(int x, int y, int width, int height) {
-
-    //     return this.x + this.width > x &&
-        
-    // }
-
     //function to handle when drawing is clicked
     public void mouseClicked(MouseEvent e) {
-        ScreenPosition obj = new ScreenPosition();
-        Color clickedObj = obj.getPixelColor(e.getXOnScreen(), e.getYOnScreen());
-
-        if(clickedObj.equals(Color.black)) {
-            if(lstn != null){
-                //calls object listener to draw object on display box
-                lstn.onObjectClicked(this);
-            }
+        if(spaceShip != null && spaceShip.contains(e.getPoint()))
+        {
+            ClickPopup popup = new ClickPopup(name, speed, this);
         }
     }
 

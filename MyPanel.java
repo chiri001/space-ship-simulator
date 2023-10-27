@@ -16,7 +16,6 @@ import javax.swing.*;
 public class MyPanel extends JPanel {
 
 
-    private boolean isEastPresent = false;
     private JPanel eastPanel;
     /* constructor 
      * creates a new layout for the panel
@@ -35,6 +34,7 @@ public class MyPanel extends JPanel {
         //functions to set the panels of the window
         MyMap map = create_west_layout(westSouthPanel);
         create_south_layout(westSouthPanel, map);
+        create_north_layout(westSouthPanel, map);
 
         //adding constraints for the westsouth panel
         constraint.gridx = 0;
@@ -49,7 +49,7 @@ public class MyPanel extends JPanel {
         double width = screenSize.getWidth();
         double height = screenSize.getHeight();
 
-        if (width > 600 && height > 650){
+        if (width > 700 && height > 500){
             //creates the east panel only if width and height are greater than
             //600px
             create_east_layout(constraint, map); 
@@ -66,7 +66,7 @@ public class MyPanel extends JPanel {
     private void adjustLayout(GridBagConstraints constraint, MyMap map){
         Dimension size = getSize();
 
-        if(size.width < 600 || size.height < 650){
+        if(size.width < 700 || size.height < 500){
             //remove east layout if present
             if(eastPanel != null){
                 remove(eastPanel);
@@ -104,10 +104,10 @@ public class MyPanel extends JPanel {
 
         GridBagConstraints westConstraints = new GridBagConstraints();
         westConstraints.gridx = 0;
-        westConstraints.gridy = 0;
+        westConstraints.gridy = 1;
         westConstraints.fill = GridBagConstraints.BOTH;
         westConstraints.weightx = 0.6; //cover 60% of width
-        westConstraints.weighty = 0.95; //cover 95% of height
+        westConstraints.weighty = 0.92; //cover 95% of height
 
         container.add(westPanel, westConstraints);
 
@@ -132,13 +132,37 @@ public class MyPanel extends JPanel {
 
         GridBagConstraints southConstraints = new GridBagConstraints();
         southConstraints.gridx = 0;
-        southConstraints.gridy = 1;
+        southConstraints.gridy = 2;
         southConstraints.fill = GridBagConstraints.BOTH;
         southConstraints.weightx = 0.6;
         southConstraints.weighty = 0.05;
 
         container.add(southPanel, southConstraints);
 
+    }
+
+    private void create_north_layout(JPanel container, MyMap map) {
+        /*create a new jpanel with given dimensions */
+        JPanel northPanel = new  JPanel(new GridLayout(1, 0));
+        northPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+
+        //score panel
+        ScorePanel score_panel = new ScorePanel();
+
+        //add to northpanel
+        northPanel.add(score_panel);
+
+        //style for stating positition to put north panel
+        GridBagConstraints northConstraints = new GridBagConstraints();
+        northConstraints.gridx = 0; //top of page
+        northConstraints.gridy = 0; //left most
+        northConstraints.fill = GridBagConstraints.BOTH; //stretch both ways
+        northConstraints.weightx = 0.6; //occupy 60% of width
+        northConstraints.weighty = 0.03; //occupy 5% of height
+
+        
+
+        container.add(northPanel, northConstraints);
     }
 
     /*function that creates buttons and adds it to panel 
@@ -150,30 +174,30 @@ public class MyPanel extends JPanel {
         if("START".equals(btnTxt)) {
             StartButton btn = new StartButton(btnTxt, map);
             btn.set_btn_color(color);
-            btn.set_size(80, 60);
+            btn.set_size(80, 40);
             panel.add(btn);
         } 
         else if("STOP".equals(btnTxt)) {
             StopButton btn = new StopButton(btnTxt, map);
             btn.set_btn_color(color);
-            btn.set_size(80, 60);
+            btn.set_size(80, 40);
             panel.add(btn);
         } 
         else if("ALARM".equals(btnTxt)) {
             AlarmButton btn = new AlarmButton(btnTxt, map);
             btn.set_btn_color(color);
-            btn.set_size(80, 60);
+            btn.set_size(80, 40);
             panel.add(btn);
         } 
         else if("RESET".equals(btnTxt)) {
             ResetButton btn = new ResetButton(btnTxt, map);
             btn.set_btn_color(color);
-            btn.set_size(80, 60);
+            btn.set_size(80, 40);
             panel.add(btn);
         } else if("FIRE".equals(btnTxt)) {
             FireButton btn = new FireButton(btnTxt, map);
             btn.set_btn_color(color);
-            btn.set_size(80, 60);
+            btn.set_size(80, 40);
             panel.add(btn);
         }
     }
@@ -194,22 +218,10 @@ public class MyPanel extends JPanel {
 
         GridBagConstraints gbc = new GridBagConstraints();
 
-        //object information rectangle
-        ObjectInformation objInfoRect = new ObjectInformation();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1;
-        gbc.weighty = 0.5; //take half the y space
-        gbc.fill = GridBagConstraints.BOTH;//stretches in both directions
-        eastPanel.add(objInfoRect, gbc);
-
-        map.add_object_rectangle(objInfoRect);
-
-
         //a jpanel to hold the buttons
         JPanel btnPanel = new JPanel(new GridLayout(4, 2));
-        gbc.gridy = 1;
-        gbc.weighty = 0.5;
+        gbc.gridy = 0;
+        gbc.weighty = 0.7;
         //adding some padding
         gbc.insets = new Insets(10, 10, 10, 10);
         eastPanel.add(btnPanel, gbc);
@@ -250,8 +262,8 @@ public class MyPanel extends JPanel {
         JPanel addPanel = new JPanel(new BorderLayout());
         addPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 
                                                             2));
-        gbc.gridy = 2;
-        gbc.weighty = 0.5;
+        gbc.gridy = 1;
+        gbc.weighty = 0.3;
         eastPanel.add(addPanel, gbc);
         //add a title
         JLabel title = new JLabel("Draw Object");
@@ -293,12 +305,6 @@ public class MyPanel extends JPanel {
             btn.set_size(60, 50);
             panel.add(btn, constraint); //add to panel and set constraint
         }
-        // else if("ADD".equals(btnTxt) ) {
-        //     ArrowButton btn = new ArrowButton(btnTxt, map);
-        //     btn.set_btn_color(color); //set button color
-        //     btn.set_size(60, 50);
-        //     panel.add(btn, constraint); //add to panel and set constraint
-        // }
         else {
             //other buttons
             MyButton btn = new MyButton(btnTxt);

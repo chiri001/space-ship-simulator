@@ -9,12 +9,15 @@
  */
 
 import java.awt.*;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.Timer;
 
+import java.awt.event.MouseEvent;
 
-public class SpaceDebriCanvas implements DrawingCanvas {
+
+public class SpaceDebriCanvas implements DrawingCanvas, MouseListener {
 
     private double population = 20;
     private String name = "debri";
@@ -26,10 +29,13 @@ public class SpaceDebriCanvas implements DrawingCanvas {
     private Timer debriTimer;
     private MyMap myMap;
     private int highestY;
+    private Polygon single_debri;
+    private Color default_color = Color.gray;
 
 
     private ArrayList<SpaceDebri> debriList = new ArrayList<>();
     private ArrayList<SpaceDebri> debriDefPos = new ArrayList<>();
+    private ArrayList<Polygon> debri_polygons = new ArrayList<>();
 
     public SpaceDebriCanvas (MyMap map) {
         for(int i = 0; i < population; i++) {
@@ -41,6 +47,7 @@ public class SpaceDebriCanvas implements DrawingCanvas {
             debriDefPos.add(new SpaceDebri(debri.get_offset_x(), debri.get_offset_y()));
         }
         this.myMap = map;
+        this.myMap.addMouseListener(this);
 
         debriTimer = new Timer(speed, new SpaceDebriListener(this, myMap));
     }
@@ -69,6 +76,23 @@ public class SpaceDebriCanvas implements DrawingCanvas {
     public void forward(int forward) {
         debriTimer.setDelay(speed/forward);
     }
+
+    public void set_speed(int speed2) {
+        speed = speed2;
+    }
+
+    public void set_color(Color selected_color) {
+        default_color = selected_color;
+    }
+
+    public Shape get_position() {
+        return null;
+    }
+
+    public void removeMyListener() {
+        myMap.removeMouseListener(this);
+    }
+    
 
     public void draw(Graphics2D g, Dimension canvasSize) {
         for(SpaceDebri debri : debriList){
@@ -122,10 +146,10 @@ public class SpaceDebriCanvas implements DrawingCanvas {
             yPoints[i] = centerY + (int)(Math.sin(angle) * (asteroidSize - offsets[i]));
         }
 
-
-        g.setColor(Color.gray);
-        
-        g.fillPolygon(xPoints, yPoints, numSides);
+        single_debri = new Polygon(xPoints, yPoints, numSides);
+        debri_polygons.add(single_debri);
+        g.setColor(default_color);
+        g.fillPolygon(single_debri);
 
         this.highestY = Integer.MAX_VALUE;
         for (int i = 0; i < numSides; i++) {
@@ -173,6 +197,7 @@ public class SpaceDebriCanvas implements DrawingCanvas {
 
         //reset to initial values
         debriTimer.setDelay(speed);
+        default_color = Color.gray;
         for (int i = 0; i < debriList.size(); i++) {
             SpaceDebri originalDebri = debriDefPos.get(i); //get original ofst
             SpaceDebri currentDebri = debriList.get(i); //get curr offset
@@ -209,6 +234,19 @@ public class SpaceDebriCanvas implements DrawingCanvas {
                 debri.set_offsets(debri.get_offset_x(), debri.get_offset_y() + move);
             }
         }
+    }
+
+    //function to handle when drawing is clicked
+    public void mouseClicked(MouseEvent e) {
+    }
+
+    public void mousePressed(MouseEvent e) {
+    }
+    public void mouseReleased(MouseEvent e) {
+    }
+    public void mouseEntered(MouseEvent e) {
+    }
+    public void mouseExited(MouseEvent e) {
     }
     
 }

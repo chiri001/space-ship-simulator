@@ -25,7 +25,6 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
     private int diameter = 0;
     private int x = 0;
     private int y = 0;
-    private ObjectListener lstn;
     private int population;
     private int scale = 15;
     private double move = 0.05;
@@ -35,17 +34,18 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
     private Timer planetTimer;
     private MyMap myMap;
     private int highestY;
+    private Color default_color = Color.blue;
 
     private ArrayList<SateLite> sateLiteList = new ArrayList<>();
 
-    public PlanetCanvas(ObjectListener lstn, double xOffset, double yOffset, int satelites, MyMap map) {
-        this.lstn = lstn;
+    public PlanetCanvas(double xOffset, double yOffset, int satelites, MyMap map) {
         this.xOffset = xOffset;
         this.yOffset = yOffset;
         this.def_xOffset = xOffset;
         this.def_yOffset = yOffset;
         this.population = satelites;
         this.myMap = map;
+        this.myMap.addMouseListener(this);
 
         int orbitRadius = diameter;
         double angle = 2 * Math.PI / population; //divide angles equally
@@ -84,8 +84,17 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
         planetTimer.stop();
     }
 
+    public void removeMyListener() {
+        myMap.removeMouseListener(this);
+    }
+
     public void forward(int forward) {
         planetTimer.setDelay(speed/forward); //update timer speeed
+    }
+
+    public Shape get_position() {
+        Rectangle2D planetBounds = new Rectangle2D.Double(x, y, diameter, diameter);
+        return planetBounds;
     }
 
     /* draw 
@@ -100,7 +109,7 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
         this.x = (int) ((canvasSize.width - diameter) / xOffset);
         this.y = (int) ((canvasSize.height - diameter) / yOffset);
 
-        g.setColor(Color.blue);
+        g.setColor(default_color);
         g.fillOval(x, y, diameter, diameter);
         this.highestY = y;
 
@@ -160,6 +169,7 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
         planetTimer.setDelay(speed);
         yOffset = def_yOffset;
         xOffset = def_xOffset;
+        default_color = Color.blue;
     }
 
     //rewinds planet movement when called
@@ -177,6 +187,14 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
         return true;
     }
 
+    public void set_speed(int speed2) {
+        speed = speed2;
+    }
+
+    public void set_color(Color selected_color) {
+        default_color = selected_color;
+    }
+
     //mouse eventlistener for planet drawing
     public void mouseClicked(MouseEvent e) {
         //setting the bounds of the planet
@@ -184,9 +202,7 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
 
         //check if the region bound is clicked
         if(planetBounds.contains(e.getPoint())) {
-            if(lstn != null){
-                lstn.onObjectClicked(this);
-            }
+            ClickPopup popup = new ClickPopup(name, speed, this);
         }
     }
 

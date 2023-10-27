@@ -38,6 +38,19 @@ public class ObjectBoxCanvas implements DrawingCanvas {
         return true; //default since N/A to this drawing
     }
 
+    public void set_speed(int speed2) {
+    }
+
+    public void set_color(Color selected_color) {
+    }
+
+    public Shape get_position() {
+        return null;
+    }
+
+    public void removeMyListener() {
+    }
+
     //function that draws object box then draws items in it
     public void drawObj(Graphics2D g, Dimension canvasSize, DrawingCanvas obj){
         

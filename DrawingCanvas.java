@@ -26,4 +26,8 @@ public interface DrawingCanvas {
     void reset();
     void move_item(String direction);
     boolean isWithinMap(int y, int diameter);
+    void set_color(Color selected_color);
+    void set_speed(int new_speed);
+    Shape get_position();
+    void removeMyListener();
 }

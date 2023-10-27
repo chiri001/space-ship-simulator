@@ -9,11 +9,14 @@
  */
 
 import java.awt.*;
+import java.awt.event.MouseListener;
 
 import javax.swing.Timer;
 
+import java.awt.event.MouseEvent;
+
 //asteroid class that draws an asteroid
-public class AsteroidCanvas implements DrawingCanvas {
+public class AsteroidCanvas implements DrawingCanvas, MouseListener {
 
     private double xOffset;
     private double yOffset;
@@ -26,6 +29,8 @@ public class AsteroidCanvas implements DrawingCanvas {
     private int speed = 200;
     private MyMap myMap;
     private int highestY;
+    private Polygon asteroid;
+    private Color default_color = new Color(65, 30, 3);
 
     //constructor
     //takes x and y offset values
@@ -35,6 +40,7 @@ public class AsteroidCanvas implements DrawingCanvas {
         this.def_xOffset = xOffset;
         this.def_yOffset = yOffset;
         this.myMap = map;
+        this.myMap.addMouseListener(this);
 
         asteroidTimer = new Timer(speed, new AsteroidListener(this, myMap));
     }
@@ -73,6 +79,14 @@ public class AsteroidCanvas implements DrawingCanvas {
     public void rewind() {
         asteroidTimer.setDelay(speed);
         yOffset += (2 * move);
+    }
+
+    public Shape get_position() {
+        return asteroid;
+    }
+
+    public void removeMyListener() {
+        myMap.removeMouseListener(this);
     }
 
     /* draw 
@@ -123,9 +137,9 @@ public class AsteroidCanvas implements DrawingCanvas {
             yPoints[i] = centerY + (int)(Math.sin(angle) * (asteroidSize - offsets[i]));
         }
 
-
-        g.setColor(new Color(65, 30, 3));
-        g.fillPolygon(xPoints, yPoints, numSides);
+        asteroid = new Polygon(xPoints, yPoints, numSides);
+        g.setColor(default_color);
+        g.fillPolygon(asteroid);
         
         //find the highest y value
         this.highestY = Integer.MAX_VALUE;
@@ -172,6 +186,15 @@ public class AsteroidCanvas implements DrawingCanvas {
         asteroidTimer.setDelay(speed);
         yOffset = def_yOffset;
         xOffset = def_xOffset;
+        default_color = new Color(65, 30, 3);
+    }
+
+    public void set_speed(int speed2) {
+        speed = speed2;
+    }
+
+    public void set_color(Color selected_color) {
+        default_color = selected_color;
     }
 
     //moves the drawing in the direction passed
@@ -195,5 +218,22 @@ public class AsteroidCanvas implements DrawingCanvas {
             yOffset += move;
         }
         
+    }
+
+    //function to handle when drawing is clicked
+    public void mouseClicked(MouseEvent e) {
+        if(asteroid != null && asteroid.contains(e.getPoint()))
+        {
+            ClickPopup popup = new ClickPopup(name, speed, this);
+        }
+    }
+
+    public void mousePressed(MouseEvent e) {
+    }
+    public void mouseReleased(MouseEvent e) {
+    }
+    public void mouseEntered(MouseEvent e) {
+    }
+    public void mouseExited(MouseEvent e) {
     }
 }

@@ -44,8 +44,20 @@ class PointerCanvas implements DrawingCanvas {
     public void move_item(){
     }
 
+    public void set_speed(int speed2) {
+    }
+
+    public void set_color(Color selected_color) {
+    }
+
     public boolean isWithinMap(int y, int dimaeter){
         return true; //always true
+    }
+
+    public Shape get_position() {
+        return null;
+    }
+    public void removeMyListener() {
     }
 
     /* draw 

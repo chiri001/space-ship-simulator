@@ -10,14 +10,16 @@
 
 
 import java.awt.*;
+import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 import javax.swing.*;
 
 //My map class that is incharge of handling elements in the map
-class MyMap extends JPanel implements ObjectListener {
+class MyMap extends JPanel {
     private CircleCanvas circleCanvas; //circle boundary for map
     private SpaceShipCanvas spaceShipCanvas; //spaceship drawing class
     private PlanetCanvas planetCanvas;//planet drawing class
@@ -26,16 +28,15 @@ class MyMap extends JPanel implements ObjectListener {
     private SpaceDebriCanvas debriCanvas;
     private MySpaceship mySpaceShip;
 
-    //variable to store the the rectangle where object can be displayed 
-    //when clicked
-    private ObjectInformation objectInfoInstance;
-
     //variable used by timer to set speed of objects on map
     private int forward = 2;
     private boolean isSimulationStopped = false;
     private ArrayList<DrawingCanvas> allDrawables = new ArrayList<>();
     private ArrayList<DrawingCanvas> defDrawings = new ArrayList<>();
     private ArrayList<String> newDrawings = new ArrayList<>();
+    private ArrayList<Explosion> explosions = new ArrayList<>();
+    private ArrayList<DrawingCanvas> collided = new ArrayList<>();
+    
     private Timer drawing_generator_timer;
 
     public MyMap() {
@@ -44,18 +45,15 @@ class MyMap extends JPanel implements ObjectListener {
         this.circleCanvas = new CircleCanvas(); //boundary for map
 
         //other drawings
-        this.spaceShipCanvas = new SpaceShipCanvas(this, 3, 3, this);
-        this.addMouseListener(spaceShipCanvas);
+        this.spaceShipCanvas = new SpaceShipCanvas(3, 3, this);
         allDrawables.add(spaceShipCanvas);
         defDrawings.add(spaceShipCanvas);
 
-        this.mySpaceShip = new MySpaceship(this, 2, 2, this);
-        this.addMouseListener(mySpaceShip);
+        this.mySpaceShip = new MySpaceship(2, 2, this);
         allDrawables.add(mySpaceShip);
         defDrawings.add(mySpaceShip);
 
-        this.planetCanvas = new PlanetCanvas(this, 1.5, 4, 5, this);
-        this.addMouseListener(planetCanvas);
+        this.planetCanvas = new PlanetCanvas(1.5, 4, 5, this);
         allDrawables.add(planetCanvas);
         defDrawings.add(planetCanvas);
 
@@ -81,17 +79,6 @@ class MyMap extends JPanel implements ObjectListener {
         start_simulation(); //start the simulation
     }
 
-    //the function takes the rectangle that displays clicked drawings and
-    //stores it in the class
-    public void add_object_rectangle(ObjectInformation objInfoRect) {
-        this.objectInfoInstance = objInfoRect;
-    }
-
-    //function handles when a drawing on map is clicked
-    public void onObjectClicked(DrawingCanvas canvas) {
-        objectInfoInstance.set_object(canvas);
-        repaint();
-    }
 
     //starts simulation by starting the timer
     public void start_simulation() {
@@ -103,6 +90,48 @@ class MyMap extends JPanel implements ObjectListener {
         isSimulationStopped = false;
         repaint();
         
+    }
+
+    private boolean check_for_collission(DrawingCanvas object, int index){
+
+        if(object.get_position() == null){
+            return false; //nothing to do
+        }
+
+        //check the bounds of the drawings if they collide
+        for(int i = index + 1; i < allDrawables.size(); i++){
+                DrawingCanvas object2 = allDrawables.get(i);
+
+                if(object2.get_position() != null){
+                    Area  area2 = new Area(object2.get_position()); //area of other drw
+                    Area area1 = new Area(object.get_position()); 
+                    area1.intersect(area2);
+
+                    if(! area1.isEmpty()){
+                        //handle collission
+                            explode(object, object2);
+                            return true;
+                        
+                    }
+                }
+        }
+        return false;
+    }
+
+    private void explode(DrawingCanvas obj1, DrawingCanvas obj2)
+    {
+        System.out.println("Colliding objects: " + obj1.getClass().getSimpleName() + " & " + obj2.getClass().getSimpleName()); 
+        //add objects to explostion list
+        explosions.add(new Explosion(obj1.get_position(), this));
+        explosions.add(new Explosion(obj2.get_position(), this));
+
+        //remove listeners for objects
+        obj1.removeMyListener();
+        obj2.removeMyListener();
+
+        //add drawings to removables
+        collided.add(obj1);
+        collided.add(obj2);
     }
 
     //stops simulation by stopping the timer
@@ -117,8 +146,6 @@ class MyMap extends JPanel implements ObjectListener {
         isSimulationStopped = true;
 
         repaint();
-        
-
     }
 
     //functions stops alarm when called
@@ -219,11 +246,11 @@ class MyMap extends JPanel implements ObjectListener {
     public void addDrawings(double x, double y, int satelites, String to_draw) {
     
         if(to_draw.equals("Planet")){
-            PlanetCanvas newPlanet = new PlanetCanvas(this, x, y, satelites, this);
+            PlanetCanvas newPlanet = new PlanetCanvas(x, y, satelites, this);
             allDrawables.add(newPlanet);
         }
         else if(to_draw.equals("Spaceship")){
-            SpaceShipCanvas newShip = new SpaceShipCanvas(this, x, y, this);
+            SpaceShipCanvas newShip = new SpaceShipCanvas(x, y, this);
             allDrawables.add(newShip);
         }
         else if(to_draw.equals("Asteroid")){
@@ -274,11 +301,32 @@ class MyMap extends JPanel implements ObjectListener {
         graphic_2d.setClip(clipMap); //setting new clip
 
         //check if drawings are widthin map boundary inorder to draw
-        for(DrawingCanvas drawing: allDrawables) {
-            if(drawing.isWithinMap(y, 2 * radius)){
-                //draw shapes using draw function in DrawingCanvas interface
-                drawing.draw(graphic_2d, getSize());
+        Iterator<DrawingCanvas> iterator = allDrawables.iterator();
+        int i = 0;
+        while (iterator.hasNext()) {
+            DrawingCanvas drawing = iterator.next();
+            if (drawing.isWithinMap(y, 2 * radius)) {
+                if(! check_for_collission(drawing, i)){
+                    drawing.draw(graphic_2d, getSize());
+                }
+                
+            } 
+            else {
+
+                //remove the drawing using the iterator
+                drawing.removeMyListener();
+                iterator.remove();
             }
+            i++;
         }
+
+        //remove collided items
+        allDrawables.removeAll(collided);
+        collided.clear();
+
+        //draw explosions
+        Explosion.updateAll();
+        Explosion.drawAll(graphic_2d);
     }
 }
+

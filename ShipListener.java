@@ -12,7 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /*class that implements the rotation aspect of the pointer */
-public class ShipListener implements ActionListener {
+public class ShipListener implements ActionListener{
     
     private SpaceShipCanvas spaceShipCanvas;
     private MyMap myMap;
@@ -33,4 +33,5 @@ public class ShipListener implements ActionListener {
         spaceShipCanvas.updateLocation();
         myMap.repaint(); //redraw the entire map
     }
+
 }

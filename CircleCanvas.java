@@ -35,6 +35,16 @@ public class CircleCanvas implements DrawingCanvas {
     public boolean isWithinMap(int y, int dimaeter){
         return true;
     }
+    public void set_speed(int speed2) {
+    }
+
+    public void set_color(Color selected_color) {
+    }
+    public Shape get_position() {
+        return null;
+    }
+    public void removeMyListener() {
+    }
 
     /* draw 
      * parameters include a 2d graphics and dimesnions of drawing canvas

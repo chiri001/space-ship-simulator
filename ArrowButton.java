@@ -8,22 +8,45 @@
  */
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import javax.swing.Timer;
 
 //class responsible for direction button
 //subclass for MyButoon
 public class ArrowButton extends MyButton {
 
     private MyMap myMap; //map of the program
+    private Timer timer;
 
     public ArrowButton(String label, MyMap map){
         super(label);
         this.myMap = map;
+
+        //adding a mouse listener for clicks
+        timer = new Timer(100, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                move();
+            }
+        });
+
+        this.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                timer.start();
+            }
+
+            public void mouseReleased(MouseEvent e) {
+                timer.stop();
+            }
+        });
     }
 
 
-    //function tells myspaceship to acrivate alarm.
-    @Override
-    public void actionPerformed(ActionEvent e) {
+
+    private void move() {
 
         if(this.get_button_name().equals("UP")){
             //move up
@@ -40,9 +63,12 @@ public class ArrowButton extends MyButton {
         else if(this.get_button_name().equals("RIGHT")){
             //move right
             myMap.move_items(this.get_button_name());
-        } else {
-            super.actionPerformed(e); //call default listener for MyButton
         }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        super.actionPerformed(e);
     }
 
 }
