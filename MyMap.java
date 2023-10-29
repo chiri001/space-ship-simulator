@@ -92,14 +92,18 @@ class MyMap extends JPanel {
 
         isSimulationStopped = false;
         repaint();
-        check_game_state();
+
+        check_game_state(); //checks if myShip has collided
         
     }
 
+    //function  checks whether two objects on the map have collided
+    //parameters include a Drawing Canvas object and the index of the object
+    //           in the array list contianing all drawings.
     private boolean check_for_collission(DrawingCanvas object, int index){
 
         if(object.get_position() == null){
-            return false; //nothing to do
+            return false; //nothing to do for some draiwngs, i.e pointer
         }
 
         //check the bounds of the drawings if they collide
@@ -112,8 +116,8 @@ class MyMap extends JPanel {
                     area1.intersect(area2);
 
                     if(! area1.isEmpty() ){  
-                        //handle collission
 
+                        //handle collission
                         if(object.get_name() == "Benatar" || object2.get_name() == "Benatar")
                             myShipExploded = true;
                         
@@ -122,12 +126,13 @@ class MyMap extends JPanel {
                     }
                 }
         }
-        return false;
+        return false; //no collission detected
     }
 
+    //function that adds colliding objects to the explode list
+    //Params: objects colliding
     private void explode(DrawingCanvas obj1, DrawingCanvas obj2)
     {
-        System.out.println("Colliding objects: " + obj1.getClass().getSimpleName() + " & " + obj2.getClass().getSimpleName()); 
         //add objects to explostion list
         explosions.add(new Explosion(obj1.get_position(), this));
         explosions.add(new Explosion(obj2.get_position(), this));
@@ -149,8 +154,8 @@ class MyMap extends JPanel {
             drawing.stop(); //stops all timers for drawings
         }
 
-        drawing_generator_timer.stop();
-        score_panel.stop_destination_timer();
+        drawing_generator_timer.stop(); //stop drawing generation
+        score_panel.stop_destination_timer(); //stop updating distance
         isSimulationStopped = true;
 
         repaint();
@@ -173,7 +178,7 @@ class MyMap extends JPanel {
             forward *= 2; //increases speed by multiples of 2
 
             repaint();
-            check_game_state();
+            check_game_state(); //check if myspaceship hasn't collided
         }
     }
 
@@ -217,10 +222,13 @@ class MyMap extends JPanel {
         
         //reset values
         forward = 2;
+        myShipExploded = false;
+        isSimulationStopped = false;
+
         
         //repaint screen
         repaint();
-        check_game_state();
+        check_game_state(); //check if mySpaceship has not collided
     }
 
     //functions initializes timer for randomizing generation of new drawings
@@ -251,17 +259,20 @@ class MyMap extends JPanel {
 
     }
 
+    //the function starts the timer showing user remaining distance to 
+    //end simulation
     public void set_score_timer(ScorePanel score_panel){
         this.score_panel = score_panel;
         score_panel.start_destination_timer();
     }
 
+    //function checks the state of the game
     public void check_game_state() {
         if(myShipExploded) {
             //end game if myship exploded
             simulation_over end_sim = new simulation_over("FAILURE", 
                                             this);
-            end_sim.showMessage();
+            end_sim.showMessage(); //show the meessage
         }
     }
 
@@ -310,6 +321,7 @@ class MyMap extends JPanel {
         repaint();
         check_game_state();
     }
+    
     /* Paintcomponent
      * parameters is graphics to draw with
      * returns nothing

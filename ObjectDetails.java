@@ -4,7 +4,8 @@
  * File: ObjectDetails.java
  * Date modified: 10/05/23
  * 
- * The file handles taking information about object to draw
+ * The file handles the class ObjectDetails and is responsible for taking
+ * informatin from user baout adding a drawing
  */
 
 import java.awt.Component;
@@ -20,8 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-//the end button is the button responsible for ending the simulation
-//it is a subclass of Mybutton
+
 public class ObjectDetails extends JPanel implements ActionListener {
 
     private MyMap myMap;
@@ -35,11 +35,12 @@ public class ObjectDetails extends JPanel implements ActionListener {
     public ObjectDetails(MyMap map){
 
         this.myMap = map;
-        btn.addActionListener(this);
+        btn.addActionListener(this); //add listener to submit button
 
+        //set layout for adding the parameters
         setLayout(new GridBagLayout());
         GridBagConstraints constraint = new GridBagConstraints();
-        constraint.insets = new Insets(5,5,5,5);
+        constraint.insets = new Insets(5,5,5,5); //padding
 
         //common inputs
         addComponent(this,new JLabel("X Offset(1.5 - 4.5):"), 0, 0, constraint);
@@ -53,6 +54,11 @@ public class ObjectDetails extends JPanel implements ActionListener {
         addComponent(this, sTextField, 1, 2, constraint); //beside satelite label
     }
 
+    //adds a component to the drawing panel taking not of the grid and 
+    //constraint
+    //params include: Container to add items, component to add, the x an y
+    //grid posn of the component and the constraint to be applied on all 
+    //components
     public void addComponent(Container cont, Component comp, int x , int y, 
                             GridBagConstraints constrt) {
         constrt.gridx = x; //posn to occupy on the x axis of layout
@@ -60,6 +66,8 @@ public class ObjectDetails extends JPanel implements ActionListener {
         cont.add(comp, constrt); //add to panel
     }
 
+    //function updates the content of the display panel depending on choosen
+    //object
     public void updateContent(String object) {
 
         if ("Planet".equals(object)) {
@@ -76,6 +84,7 @@ public class ObjectDetails extends JPanel implements ActionListener {
         repaint(); //repaint panel
     }
 
+    //the function sets the object needed to be drawn
     public void set_item_to_draw(String object){
         this.to_draw = object; //item to draw
     }
@@ -99,6 +108,7 @@ public class ObjectDetails extends JPanel implements ActionListener {
         resetInputs();
     }
 
+    //resets all inputs
     public void resetInputs() {
         //resets input fields
         xTextField.setText("");

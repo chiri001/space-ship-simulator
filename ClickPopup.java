@@ -1,4 +1,12 @@
-
+/*
+ * Name : Rennie Kipchirchir
+ * Project: Spaceship Simulator
+ * File: Mypanel.java
+ * Date modified: 10/28/23
+ * 
+ * This file contains ClickPopup calss that creates a new popup when an item
+ * on the map is clicked
+ */
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -18,7 +26,8 @@ public class ClickPopup extends JDialog implements ActionListener{
     int speed = 0;
     String selected_color = "BLACK";
 
-    
+    //constructor
+    //parameters: name of the drawing, speed of the drawing, and the drawing
     public ClickPopup(String name, int speed, DrawingCanvas obj){
 
         this.obj = obj;
@@ -44,6 +53,7 @@ public class ClickPopup extends JDialog implements ActionListener{
         speedInput = new JTextField();
         add(speedInput);
 
+        //color collection
         add(new JLabel("New Color: "));
         colorOptions = new JComboBox<>(new String[]{
             "RED", "GREEN", "BLUE", "MAGENTA", "CYAN", "YELLOW", "BLACK", 
@@ -57,7 +67,7 @@ public class ClickPopup extends JDialog implements ActionListener{
         JButton btn_2 = new JButton("Cancel");
         btn_2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                dispose();
+                dispose(); //close the popup
             }
         });
 
@@ -70,6 +80,7 @@ public class ClickPopup extends JDialog implements ActionListener{
         setDefaultCloseOperation(DISPOSE_ON_CLOSE); //close on submit
     }
 
+    //action performed for the submit button
     public void actionPerformed(ActionEvent e) {
         try {
             //get the values
@@ -80,11 +91,13 @@ public class ClickPopup extends JDialog implements ActionListener{
             obj.set_speed(speed);
             dispose();
         } catch(NumberFormatException ex){
-            System.out.println("Error ocurring at click popup");
+            System.out.println("Error ocurring at click popup, cna't update speed/color");
             return; // do nothing
         }   
     }
 
+    //function converts a given string to corresponding color
+    //params include the name of the color
     private Color string_to_color(String color) {
         switch (color) {
             case "RED":

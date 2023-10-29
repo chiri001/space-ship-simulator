@@ -38,6 +38,23 @@ and an alarm button if collission cannot be avoided/ potential impact.
                       What program does so far
 -----------------------------------------------------------------------------
 
+
+                    Week 6 :
+----------------------------------------
+I have implemented mouse picking for my drawings except for satelite drawing
+and debri drawing. The mouse picking enables user to update speed and color
+of the drawing. Satelite is not implemented as it depends on planet and 
+debri is not updated since their movement is fast.
+
+I have implemented collission of objects on screen. The only object that 
+does not collide with others is space debri as their impact is not enough
+to cause an explosion
+
+I have implemented a panel to show the score. In this simulation, instead 
+pf the score it allows you to choose a galaxy you want to visit and updates
+the distance to the galaxy over time.
+
+
                     Week 5 :
 ----------------------------------------
 I have implemented movement of all my drawings.
@@ -122,7 +139,6 @@ DrawingCanvas
     |--SateLite
     |--PlanetCanvas
     |--SpaceDebriCanvas
-    |--ObjectBoxCanvas
 
 ObjectListener
     |--MyMap
@@ -169,6 +185,7 @@ Main
 |-- JFrame
 |-- MyPanel
     |-- JPanel
+
     |-- MyMap
         |-- JPanel
         |-- SpaceShipCanvas
@@ -188,10 +205,6 @@ Main
         |-- SpaceDebriCanvas
             *-- DrawingCanvas
         *--ObjectListener
-
-    |--ObjectInformation
-        |--ObjectBox
-            *-- DrawingCanvas
     
     |--MyButton
         |--JButton
@@ -208,26 +221,24 @@ Main
     
     |--DropDown
 
+    |--ScorePanel
+        |--simulation_over
+
+    |--ObjectDetails
+        |--MyMap
+
 
 --------------------------------------------------------------------------
 
 Collaboration relationships :
 -----------------------------
-MyMap depends on a number of classes to implement different functionalities
-    1.movement of a drawing and pointer listeners are defined in the drawings
-        class. Then my map simply calls this functions to effect a change on a
-        drawing. i.e MyMap has a rewind function that when called calls 
-        the drawings rewind function.
-        so map.rewind()--> drawing.rewing(); drawing.rewind() has the 
-        implementation of how rewind should work.
-        This is the same for the following functions in MyMap:
-        1. start_simulation calls drawing.start() which starts drawing timer.
-        2.stop_simulation calls drawing.stop() which stops drawing timer.
-        3.rewind_simulation calls drawing.rewind()
-        4.activate_alarm --> calls drawing.activate_alarm (only applicable 
-        for one drawing)
-        5.reset_simulation -->calls reset for default drawings
-        6.paintcomponent --> calls draing.draw functions
+MyMap 
+   - Depends on various drawable classes like 'SpaceshipCanvas', 'AsteroidCanvas',
+    SpaceDebriCanvas, Satelite, PlanetCanvas, PointerCanvas, CircleCanvas
+    to draw objects on screen and display behavior after an aspect is altered.
+    i.e when right arrow is clicked
+   - relies on Explosion class to draw the image of an explosion after two 
+    objects have collided.
 
 MyPanel: 
     relies on JPanel to create drawing panls
@@ -239,6 +250,14 @@ MyPanel:
     for drawing on the map
     relies on DropDown to add a drop down bar on east layout
     relies on Toolkit to get screen size
+    relies on ScorePanel to draw a panel to showcase the state of the game
+    as it progresses
+
+Planetcanvas relies on Satelite to draw images of satelites around it.
+
+Simulation over relies on scorepanel to know whether the user succeeded in 
+reaching destination. It also relies on MyMap to notify it whether the user 
+spaceship exploded after collission
 
 -----------------------------------------------------------------
 
@@ -246,16 +265,24 @@ Encapsulation Secrets:
 -----------------------
 
 MyMap:
-    manages objects draen on the map
+    manages objects drawn on the map
     manages new drawing generations
     manages drawings to be drawn on map
 
 MyPanel
-    manages the creation of three main drawing layouts for the screen.
-    (bottom layout for buttons, central layout for map, and east layout 
-    for other buttons and widgets)
-    tracks whether eastpanel is present and eliminates the eastpanel if the 
-    dimensions go below 600 by 650.
+    manages the main container by organizing the main layouts for the frame
+    Dynamically adjusts the layout depending on size of the screen
+
+simulation_over
+    responsible for popups to display state of the game : success / fail
+
+ClickPopup
+    responsible for popup that allows user to change aspects of a drawing when 
+    clicked
+
+SpaceDebri
+    responsible for setting and getting the offsets of a single debri which
+    is then utilized by SpaceDebriCanvas to paint multiple debri
 
 
 ------------------------------------------------------------------
@@ -265,3 +292,16 @@ How to run:
 ---------------
 1. run javac *.java
 2. run java Main
+
+How to clean .class files: 
+---------------------------
+rm *.class
+
+
+How to Play:
+------------
+The goal of the game is to arrive at destination without blowing up
+So at start you choose a destination and use controls to ensure you do not
+collide with other objects.
+I am yet to implement the fire button which will provide a way of blowing
+up obstacles

@@ -6,6 +6,7 @@
  * 
  * This file contains MyPanel calss that creates a new JPanel for use
  */
+
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
