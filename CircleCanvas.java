@@ -11,6 +11,7 @@
 import java.awt.*;
 
 //class that creates a circle drawing using the drawing canvas interface
+//NOTE: unimplemented functions are not needed for this class
 public class CircleCanvas implements DrawingCanvas {
     
     private int diameter;
@@ -33,12 +34,14 @@ public class CircleCanvas implements DrawingCanvas {
         return 0;
     }
     public boolean isWithinMap(int y, int dimaeter){
-        return true;
+        return true; //default(always) as this is map boundary
     }
     public void set_speed(int speed2) {
+        return; //nothing to do
     }
 
     public void set_color(Color selected_color) {
+        return;//nothing to do
     }
     public Shape get_position() {
         return null;

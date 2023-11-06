@@ -1,10 +1,10 @@
 /*
  * Name : Rennie Kipchirchir
  * Project: Spaceship Simulator
- * File: RewindButton.java
+ * File: ZoomButton.java
  * Date modified: 10/12/23
  * 
- * This file contains the implementaion of the rewindbutton
+ * This file contains the implementaion of the zooming buttons.
  */
 
 import java.awt.event.ActionEvent;

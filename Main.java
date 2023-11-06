@@ -8,8 +8,6 @@
  * entire program.
  */
 
-import java.awt.Dimension;
-
 import javax.swing.JFrame;
 
 /*main class that starts the program */

@@ -79,6 +79,13 @@ public class ScorePanel extends JPanel {
         destination_timer.start();
     }
 
+    //returns the destinationtimer
+    public Timer get_destination_timer() {
+        return destination_timer;
+    }
+
+
+
     //stops the timer after arriving at destination/ when called
     public void stop_destination_timer() {
         destination_timer.stop();

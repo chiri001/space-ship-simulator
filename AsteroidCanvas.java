@@ -65,12 +65,17 @@ public class AsteroidCanvas implements DrawingCanvas, MouseListener {
         return speed;
     }
 
+    //starts the timer
     public void start(){
         asteroidTimer.start();
     }
+
+    //stops the timer
     public void stop(){
         asteroidTimer.stop();
     }
+
+    //forwards the speed
     public void forward(int forward){
         asteroidTimer.setDelay(speed / forward);
     }
@@ -81,10 +86,12 @@ public class AsteroidCanvas implements DrawingCanvas, MouseListener {
         yOffset += (2 * move);
     }
 
+    //gets the shape of drawing
     public Shape get_position() {
         return asteroid;
     }
 
+    //removes the listener for the drawing
     public void removeMyListener() {
         myMap.removeMouseListener(this);
     }
@@ -224,7 +231,8 @@ public class AsteroidCanvas implements DrawingCanvas, MouseListener {
     public void mouseClicked(MouseEvent e) {
         if(asteroid != null && asteroid.contains(e.getPoint()))
         {
-            ClickPopup popup = new ClickPopup(name, speed, this);
+            //creates a popup to take input
+            ClickPopup popup = new ClickPopup(name, speed, this); 
         }
     }
 

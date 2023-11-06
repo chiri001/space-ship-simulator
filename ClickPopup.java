@@ -1,7 +1,7 @@
 /*
  * Name : Rennie Kipchirchir
  * Project: Spaceship Simulator
- * File: Mypanel.java
+ * File: ClickPopup.java
  * Date modified: 10/28/23
  * 
  * This file contains ClickPopup calss that creates a new popup when an item
@@ -17,6 +17,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
 
 public class ClickPopup extends JDialog implements ActionListener{
 

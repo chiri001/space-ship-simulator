@@ -12,6 +12,7 @@
 import java.awt.*;
 
 // setting up a drawing canvas interface for the map
+// interface used by drawings to implement their drawings
 public interface DrawingCanvas {
 
     void draw(Graphics2D g, Dimension canvasSize);

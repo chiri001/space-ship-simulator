@@ -8,22 +8,22 @@
 -----------------------------------------------------------------------------
 
 I am makeing a spaceship radar simulator.
+
 The radar system will help the spaceship avoid collission. The objects that 
-could cause collissions include: other spaceships, satellites, space debris, 
-and asteroids. The radar system wil scan its sorroudings for objects, if an 
-object is encountered near its path, it gets the size and velocity of the
-object and then finds the distance of object and probability of impact. If there
-is a high probability of impact, it calculates the nearest safe path to travel. 
+could cause collissions include: other spaceships, planets
+and asteroids. The radar system wil scan its sorroudings for objects. 
 The user interface wil be inform of a radar display that shows the objects in 
 accordance with their size to scale near the spaceship. it also displays
 number of objects within the spaceships's sorroundings. When an object
-is clicked it shows the objects distance and probability of impact. Users could
-also move the objects by dragging them across the map. There will also be 
+is clicked it shows the objects name and speed and allows user to change the
+color and speed of the object. There will also be 
 an option to zoom in and out of the map. It will also have a scanner that 
 simulates the rotating scanner. it will also have a fastforward and rewind
 option to change speed of the simulator. Up, down, left, and right button to 
-move the map. Finally it will have a start, stop, find new path, reset button
-and an alarm button if collission cannot be avoided/ potential impact.
+move items on the map. Finally it will have a start, stop, find new path, 
+reset button and an alarm button if collission cannot be avoided/ 
+potential impact. Finally it will also have a fire button that allows users
+to fire missiles at objects on thir path.
 
 -----------------------------------------------------------------------------
                         Acknowledgements
@@ -37,6 +37,15 @@ and an alarm button if collission cannot be avoided/ potential impact.
 -----------------------------------------------------------------------------
                       What program does so far
 -----------------------------------------------------------------------------
+
+
+                    Week 7 :
+----------------------------------------
+Implemented the missile functionality of the user's spaceship. So the fire
+button works
+
+Implemented zooming option for the map, users could zoom in and out of the 
+map.
 
 
                     Week 6 :
@@ -121,7 +130,16 @@ The program correctly quits when the window is closed.
                     Potential bug?
 -----------------------------------------------------------------------------
 
-No any outstanding bug
+Reset functionality.
+    When reset is clicked on exploded items, it is not able to redraw this 
+    objects. This is because once object has exploded, then it is removed
+    from system. I had not anticipated this when I created the reset 
+    functionality a few back.
+
+    Also reset needs to be clicked twice for it to work. I could not figure
+    out why.
+
+    I hope to address these bugs in the near future.
 
 -----------------------------------------------------------------------------
                         Architecture
@@ -139,9 +157,10 @@ DrawingCanvas
     |--SateLite
     |--PlanetCanvas
     |--SpaceDebriCanvas
+    |--Missile
+    |--PointerCanvas
+    |--CircleCanvas
 
-ObjectListener
-    |--MyMap
 
 --------------------------------------------------------------------------
 
@@ -160,6 +179,7 @@ JButton
         |--FireButton
         |--ArrowButton
         |--ResetButton
+        |--ZoomButton
 
 SpaceShipCanvas
     |--MySpaceship
@@ -190,32 +210,35 @@ Main
         |-- JPanel
         |-- SpaceShipCanvas
             *-- DrawingCanvas
-        |-- SpaceshipListener
+            |-- ShipListener
         |-- MySpaceship
             *-- DrawingCanvas
-        |-- MySpaceshipListener
+            |-- Missile
+                *--DrawingCanvas
+            |-- MySpaceshipListener
         |-- AteroidCanvas
             *-- DrawingCanvas
-        |-- AstoroidListener
+            |-- AstoroidListener
         |-- PlanetCanvas
             *-- DrawingCanvas
             |-- SateLite
                 *-- DrawingCanvas
-        |-- PlanetListener
+            |-- PlanetListener
         |-- SpaceDebriCanvas
             *-- DrawingCanvas
-        *--ObjectListener
+            |--SpaceDebri
     
     |--MyButton
         |--JButton
         |--StartButton
-        |--EndButton
+        |--StopButton
         |--RewindButton
         |--ForwardButton
         |--AlarmButton
         |--FireButton
         |--ArrowButton
         |--ResetButton
+        |--zoomButton
     
     |--ObjectDetails
     
@@ -223,9 +246,6 @@ Main
 
     |--ScorePanel
         |--simulation_over
-
-    |--ObjectDetails
-        |--MyMap
 
 
 --------------------------------------------------------------------------
@@ -259,6 +279,13 @@ Simulation over relies on scorepanel to know whether the user succeeded in
 reaching destination. It also relies on MyMap to notify it whether the user 
 spaceship exploded after collission
 
+SpaceDebriCanvas relies on spaceDebri class to help it create the offset 
+values for debri.
+
+MySpaceship relies on Missile to create a missile for the spaceship. MyMap 
+relies on MySpaceship to realease a missilel.
+
+
 -----------------------------------------------------------------
 
 Encapsulation Secrets:
@@ -268,6 +295,7 @@ MyMap:
     manages objects drawn on the map
     manages new drawing generations
     manages drawings to be drawn on map
+    checks for collisions of objects
 
 MyPanel
     manages the main container by organizing the main layouts for the frame
@@ -284,6 +312,9 @@ SpaceDebri
     responsible for setting and getting the offsets of a single debri which
     is then utilized by SpaceDebriCanvas to paint multiple debri
 
+Explosion:
+    handles all explosions to be drawn on map
+
 
 ------------------------------------------------------------------
 
@@ -299,9 +330,16 @@ rm *.class
 
 
 How to Play:
-------------
+--------------
 The goal of the game is to arrive at destination without blowing up
 So at start you choose a destination and use controls to ensure you do not
 collide with other objects.
-I am yet to implement the fire button which will provide a way of blowing
-up obstacles
+
+To avoid collission you either use the arrow buttons or the fire button 
+which unleashes a missile that strikes down object that can destroy the 
+ship. In this implementation I have assumed that planets are going to 
+destroy the ships on collision. Other collisio objects inncludes asteroid
+and other spaceships.
+
+
+Reset button allows you to reset the simulation. Must be clicked twice to work.

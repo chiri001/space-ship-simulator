@@ -29,9 +29,7 @@ class MyMap extends JPanel {
     private SpaceDebriCanvas debriCanvas;
     private MySpaceship mySpaceShip;
 
-    //variable used by timer to set speed of objects on map
-    private int forward = 2;
-    private boolean isSimulationStopped = false;
+    
     private ArrayList<DrawingCanvas> allDrawables = new ArrayList<>();
     private ArrayList<DrawingCanvas> defDrawings = new ArrayList<>();
     private ArrayList<String> newDrawings = new ArrayList<>();
@@ -41,6 +39,8 @@ class MyMap extends JPanel {
 
     private boolean myShipExploded  = false;
     private ScorePanel score_panel;
+    private int forward = 2;
+    private boolean isSimulationStopped = false;
     
     private Timer drawing_generator_timer;
 
@@ -96,79 +96,30 @@ class MyMap extends JPanel {
         }
         drawing_generator_timer.start(); //starts random generator timer
 
+        //start destination timer 
+        if(score_panel != null) {
+            score_panel.start_destination_timer();
+        }
+
         isSimulationStopped = false;
         repaint();
 
         check_game_state(); //checks if myShip has collided
     }
 
-    //function  checks whether two objects on the map have collided
-    //parameters include a Drawing Canvas object and the index of the object
-    //           in the array list contianing all drawings.
-    private boolean check_for_collission(DrawingCanvas object, int index){
-
-        if(object.get_position() == null){
-            return false; //nothing to do for some draiwngs, i.e pointer
-        }
-
-        //check the bounds of the drawings if they collide
-        for(int i = index + 1; i < allDrawables.size(); i++){
-                DrawingCanvas object2 = allDrawables.get(i);
-
-                if(object2.get_position() != null){
-                    Area  area2 = new Area(object2.get_position()); //area of other drw
-                    Area area1 = new Area(object.get_position()); 
-                    area1.intersect(area2);
-
-                    if(! area1.isEmpty() ){  
-
-                        //handle collission
-                        if(object.get_name() == "Benatar" || object2.get_name() == "Benatar")
-                            myShipExploded = true;
-                        
-                        explode(object, object2);
-                        return true;
-                    }
-                }
-        }
-        return false; //no collission detected
-    }
-
-    //function that adds colliding objects to the explode list
-    //Params: objects colliding
-    private void explode(DrawingCanvas obj1, DrawingCanvas obj2)
-    {
-        //add objects to explostion list
-        explosions.add(new Explosion(obj1.get_position(), this));
-        explosions.add(new Explosion(obj2.get_position(), this));
-
-        //remove listeners for objects
-        obj1.removeMyListener();
-        obj2.removeMyListener();
-
-        //add drawings to removables
-        collided.add(obj1);
-        collided.add(obj2);
-    }
-
-    public void activate_missile() {
-        if(!myShipExploded && !isSimulationStopped) {
-            Missile newMissile = mySpaceShip.createMissile();
-            missiles.add(newMissile);
-        }
-    }
-
+    //function to help with zoom in
     public void zoomIn() {
         if(zoomFactor < maxZoomFactor) {
-            zoomFactor *= 1.1;
+            zoomFactor *= 1.1; //scale up dy factor of 1.1
             revalidate();
             repaint();
         }
     }
 
+    //function to aid with zoom out
     public void zoomOut() {
         if(zoomFactor > minZoomFactor) {
-            zoomFactor /= 1.1;
+            zoomFactor /= 1.1; //scale down by factor of 1.1
             revalidate();
             repaint();
         }
@@ -238,26 +189,30 @@ class MyMap extends JPanel {
         //stop all ongoing simulation
         stop_simulation();
 
-        //clear alldrawables
-        allDrawables.clear();
-
-        //set default drawings to alldrawables
-        allDrawables.addAll(defDrawings);
-
-        //reset all default objects
+        //reset all default objects that still exist
         for(DrawingCanvas drawing : allDrawables) {
             drawing.reset();
         }
+
+        //clear alldrawables
+        allDrawables.clear();
+        collided.clear();
+        missiles.clear();
+
+        //set default drawings to alldrawables
+        allDrawables.addAll(defDrawings);
         
         //reset values
         forward = 2;
         myShipExploded = false;
         isSimulationStopped = false;
 
+        //start simulations
+        start_simulation();
         
         //repaint screen
+        revalidate();
         repaint();
-        check_game_state(); //check if mySpaceship has not collided
     }
 
     //functions initializes timer for randomizing generation of new drawings
@@ -350,6 +305,14 @@ class MyMap extends JPanel {
         repaint();
         check_game_state();
     }
+
+    //informs mySpaceship to create the missile
+    public void activate_missile() {
+        if(!myShipExploded && !isSimulationStopped) {
+            Missile newMissile = mySpaceShip.createMissile();
+            missiles.add(newMissile);
+        }
+    }
     
     /* Paintcomponent
      * parameters is graphics to draw with
@@ -393,9 +356,15 @@ class MyMap extends JPanel {
                 
             } 
             else {
-                //remove the drawing using the iterator
-                drawing.removeMyListener();
-                iterator.remove();
+                
+                if(drawing instanceof MySpaceship) {
+                    defDrawings.add(drawing); //reuse for reset
+                } else {
+                    //remove the drawing using the iterator
+                    drawing.removeMyListener();
+                    iterator.remove();
+                }
+                
             }
             i++;
         }
@@ -409,7 +378,7 @@ class MyMap extends JPanel {
         Explosion.drawAll(graphic_2d);
 
         //update game
-        updateGameFrame();
+        updateGame();
 
         //draw missiles
         for (Missile missile : missiles) {
@@ -419,23 +388,27 @@ class MyMap extends JPanel {
         graphic_2d.setTransform(originalTransform);
     }
 
-    public void updateGameFrame() {
-        updateMissiles();
-        checkMissileCollisions();
+    //checks if there has been a missile hit
+    public void updateGame() {
+        updateMissiles(); //checks if missile is active
+        checkMissileCollisions(); //handles collision of missile and drawing
         repaint();
     }
 
+    //updates the number of missile still active
     private void updateMissiles() {
         Iterator<Missile> it = missiles.iterator();
         while (it.hasNext()) {
             Missile missile = it.next();
-            missile.move(getSize());
+            missile.move(getSize());//moves the missile
+
             if (!missile.isActive()) {
                 it.remove();
             }
         }
     }
 
+    //checks if missile hit an object
     private void checkMissileCollisions() {
         Iterator<Missile> missileIterator = missiles.iterator();
         while (missileIterator.hasNext()) {
@@ -443,11 +416,12 @@ class MyMap extends JPanel {
     
             for (DrawingCanvas drawable : allDrawables) {
                 if (drawable instanceof MySpaceship) {
-                    continue;
+                    continue; //skip mySpaceship
                 }
                 if(missile.get_position() != null && drawable.get_position() != null) {
+                    //item that can destroy ship on collision
                     if (missile.get_position().intersects(drawable.get_position().getBounds2D())) {
-                        explode(missile, drawable);
+                        explode(missile, drawable); //add to explode list
                         missileIterator.remove();
                         break;
                     }
@@ -455,5 +429,54 @@ class MyMap extends JPanel {
             }
         }
     }
-}
 
+    //function  checks whether two objects on the map have collided
+    //parameters include a Drawing Canvas object and the index of the object
+    //           in the array list contianing all drawings.
+    private boolean check_for_collission(DrawingCanvas object, int index){
+
+        if(object.get_position() == null){
+            return false; //nothing to do for some draiwngs, i.e pointer
+        }
+
+        //check the bounds of the drawings if they collide
+        for(int i = index + 1; i < allDrawables.size(); i++){
+                DrawingCanvas object2 = allDrawables.get(i);
+
+                if(object2.get_position() != null){
+                    Area  area2 = new Area(object2.get_position()); //area of other drw
+                    Area area1 = new Area(object.get_position()); 
+                    area1.intersect(area2);
+
+                    if(! area1.isEmpty() ){  
+
+                        //handle collission
+                        if(object.get_name() == "Benatar" || object2.get_name() == "Benatar")
+                            myShipExploded = true;
+                        
+                        explode(object, object2);
+                        return true;
+                    }
+                }
+        }
+        return false; //no collission detected
+    }
+
+    //function that adds colliding objects to the explode list
+    //Params: objects colliding
+    private void explode(DrawingCanvas obj1, DrawingCanvas obj2)
+    {
+        //add objects to explostion list
+        explosions.add(new Explosion(obj1.get_position(), this));
+        explosions.add(new Explosion(obj2.get_position(), this));
+
+        //remove listeners for objects
+        obj1.removeMyListener();
+        obj2.removeMyListener();
+
+        //add drawings to removables
+        collided.add(obj1);
+        collided.add(obj2);
+    }
+
+}

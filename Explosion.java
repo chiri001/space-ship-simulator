@@ -2,7 +2,7 @@
 /*
  * Name : Rennie Kipchirchir
  * Project: Spaceship Simulator
- * File: Mypanel.java
+ * File: Explosion.java
  * Date modified: 10/28/23
  * 
  * This file contains Explosion class. The class is responsible for drawing 

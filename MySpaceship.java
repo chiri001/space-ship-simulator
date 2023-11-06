@@ -29,6 +29,8 @@ public class MySpaceship extends SpaceShipCanvas{
     private Timer alarmTimer;
     private Polygon myShip;
     private MyMap myMap;
+    private Double def_xOffset;
+    private Double def_yOffset;
     
     private Point ship_tip_coord = new Point(2, 2); /*center(placeholder) */
 
@@ -38,6 +40,8 @@ public class MySpaceship extends SpaceShipCanvas{
         super(xOffset, yOffset, map);
         this.xOffset = xOffset;
         this.yOffset = yOffset;
+        this.def_xOffset = xOffset;
+        this.def_yOffset = yOffset;
         this.myMap = map;
         this.myMap.addMouseListener(this);
 
@@ -137,6 +141,14 @@ public class MySpaceship extends SpaceShipCanvas{
         alarmTimer.start(); //start alarm timer
     }
 
+    //function to reset
+    public void reset() {
+        //reset to initial values
+        yOffset = def_yOffset;
+        xOffset = def_xOffset;
+        reset_alarm();
+    }
+
     public void reset_alarm() {
         alarmTimer.stop(); //stop timer
         reset_color(); //reset spaceship color
@@ -160,10 +172,11 @@ public class MySpaceship extends SpaceShipCanvas{
         default_color = Color.black;
     }
 
+    //creats a missile drawing and returns the missile created
     public Missile createMissile() {
         Point missileStart = new Point(ship_tip_coord);
         Double missileDirection = -1.0; //this represent change in y coord upwards
-        Double missileSpeed = 2.0;
+        Double missileSpeed = 0.05;
 
         Missile m1 = new Missile(missileStart, missileDirection, missileSpeed);
         return m1;

@@ -2,7 +2,7 @@
 /*
  * Name : Rennie Kipchirchir
  * Project: Spaceship Simulator
- * File: MyMap.java
+ * File: Simulation_over.java
  * Date modified: 10/28/23
  * 
  * This file contains simulation_over class. The class is responsible for 

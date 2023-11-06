@@ -3,7 +3,7 @@
 /*
  * Name : Rennie Kipchirchir
  * Project: Spaceship Simulator
- * File: ScreenPostion.java
+ * File: SPaceDebri.java
  * Date modified: 10/12/23
  * 
  * This file checks the pixels of the clicked section of the screen
