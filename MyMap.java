@@ -10,6 +10,7 @@
 
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
@@ -36,11 +37,16 @@ class MyMap extends JPanel {
     private ArrayList<String> newDrawings = new ArrayList<>();
     private ArrayList<Explosion> explosions = new ArrayList<>();
     private ArrayList<DrawingCanvas> collided = new ArrayList<>();
+    private ArrayList<Missile> missiles = new ArrayList<>();
 
     private boolean myShipExploded  = false;
     private ScorePanel score_panel;
     
     private Timer drawing_generator_timer;
+
+    private double zoomFactor = 1.0;
+    private double maxZoomFactor = 5.0;
+    private double minZoomFactor = 0.2;
 
     public MyMap() {
         //create drawings
@@ -94,7 +100,6 @@ class MyMap extends JPanel {
         repaint();
 
         check_game_state(); //checks if myShip has collided
-        
     }
 
     //function  checks whether two objects on the map have collided
@@ -144,6 +149,30 @@ class MyMap extends JPanel {
         //add drawings to removables
         collided.add(obj1);
         collided.add(obj2);
+    }
+
+    public void activate_missile() {
+        if(!myShipExploded && !isSimulationStopped) {
+            Missile newMissile = mySpaceShip.createMissile();
+            missiles.add(newMissile);
+        }
+    }
+
+    public void zoomIn() {
+        if(zoomFactor < maxZoomFactor) {
+            zoomFactor *= 1.1;
+            revalidate();
+            repaint();
+        }
+    }
+
+    public void zoomOut() {
+        if(zoomFactor > minZoomFactor) {
+            zoomFactor /= 1.1;
+            revalidate();
+            repaint();
+        }
+    
     }
 
     //stops simulation by stopping the timer
@@ -330,6 +359,18 @@ class MyMap extends JPanel {
         super.paintComponent(g);
         Graphics2D graphic_2d = (Graphics2D) g; //2d graphics for drawings
 
+        // Storing the original transform
+        AffineTransform originalTransform = graphic_2d.getTransform();
+
+        // Get the center of the component
+        int centerX = getSize().width / 2;
+        int centerY = getSize().height / 2;
+
+        // Translate to the center, scale, and then translate back
+        graphic_2d.translate(centerX, centerY);
+        graphic_2d.scale(zoomFactor, zoomFactor);
+        graphic_2d.translate(-centerX, -centerY);   
+
         circleCanvas.draw(graphic_2d, getSize()); //drawing map
 
         //boundary clip
@@ -352,7 +393,6 @@ class MyMap extends JPanel {
                 
             } 
             else {
-
                 //remove the drawing using the iterator
                 drawing.removeMyListener();
                 iterator.remove();
@@ -367,6 +407,53 @@ class MyMap extends JPanel {
         //draw explosions
         Explosion.updateAll();
         Explosion.drawAll(graphic_2d);
+
+        //update game
+        updateGameFrame();
+
+        //draw missiles
+        for (Missile missile : missiles) {
+            missile.draw(graphic_2d, getSize());
+        }
+
+        graphic_2d.setTransform(originalTransform);
+    }
+
+    public void updateGameFrame() {
+        updateMissiles();
+        checkMissileCollisions();
+        repaint();
+    }
+
+    private void updateMissiles() {
+        Iterator<Missile> it = missiles.iterator();
+        while (it.hasNext()) {
+            Missile missile = it.next();
+            missile.move(getSize());
+            if (!missile.isActive()) {
+                it.remove();
+            }
+        }
+    }
+
+    private void checkMissileCollisions() {
+        Iterator<Missile> missileIterator = missiles.iterator();
+        while (missileIterator.hasNext()) {
+            Missile missile = missileIterator.next();
+    
+            for (DrawingCanvas drawable : allDrawables) {
+                if (drawable instanceof MySpaceship) {
+                    continue;
+                }
+                if(missile.get_position() != null && drawable.get_position() != null) {
+                    if (missile.get_position().intersects(drawable.get_position().getBounds2D())) {
+                        explode(missile, drawable);
+                        missileIterator.remove();
+                        break;
+                    }
+                }
+            }
+        }
     }
 }
 

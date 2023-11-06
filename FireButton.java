@@ -34,8 +34,8 @@ public class FireButton extends MyButton {
     //function tells myspaceship to release a missile
     @Override
     public void actionPerformed(ActionEvent e) {
-        //Not yet implemented for now
-        super.actionPerformed(e); //call default listener for MyButton
+        //initiate missile launch
+        myMap.activate_missile();
     }
 
 }

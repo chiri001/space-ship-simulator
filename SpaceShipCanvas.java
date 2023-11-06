@@ -21,8 +21,8 @@ public class SpaceShipCanvas implements DrawingCanvas, MouseListener {
     private double xOffset;
     private double yOffset;
     private String name = "Spaceship";
-    private double move = 0.09;
-    private int speed = 1000;
+    private double move = 0.05;
+    private int speed = 250;
     private int scale = 15;
     private double def_xOffset;
     private double def_yOffset;

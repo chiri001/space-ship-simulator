@@ -11,7 +11,10 @@
 import java.awt.*;
 
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+
 import javax.swing.Timer;
+import java.util.Iterator;
 
 //draws a spaceship that can be controlled in the simulation
 public class MySpaceship extends SpaceShipCanvas{
@@ -26,6 +29,8 @@ public class MySpaceship extends SpaceShipCanvas{
     private Timer alarmTimer;
     private Polygon myShip;
     private MyMap myMap;
+    
+    private Point ship_tip_coord = new Point(2, 2); /*center(placeholder) */
 
     //constructor
     //takes an Objectlistener for the ship
@@ -73,7 +78,7 @@ public class MySpaceship extends SpaceShipCanvas{
         int baseSize = Math.min(canvasSize.width, canvasSize.height);
 
         //length of spaceship landing base
-        int spaceshipLength = baseSize / scale; 
+        int spaceshipLength = baseSize / scale;
         
         //height for the main body for the spaceship (taller)
         int spaceshipHeight = spaceshipLength / 2;
@@ -111,6 +116,8 @@ public class MySpaceship extends SpaceShipCanvas{
             centerY - spaceshipLength / 6 //bottom of left side
         };
 
+        //tip of ship coordinate
+        ship_tip_coord = new Point(centerY, centerX - spaceshipHeight / x_divisor);
         myShip = new Polygon(xPoints, yPoints, 7);
         g.setColor(default_color);
         g.fillPolygon(myShip);
@@ -122,6 +129,7 @@ public class MySpaceship extends SpaceShipCanvas{
         int textY =  centerX - spaceshipHeight / x_divisor + (int) ( 1.5 * fm.getHeight()); //put text below drawing
         Name drName = new Name(textX, textY, name, 10);
         drName.draw(g);
+
     }
 
     //function sounds the spaceship alarm
@@ -152,6 +160,14 @@ public class MySpaceship extends SpaceShipCanvas{
         default_color = Color.black;
     }
 
+    public Missile createMissile() {
+        Point missileStart = new Point(ship_tip_coord);
+        Double missileDirection = -1.0; //this represent change in y coord upwards
+        Double missileSpeed = 2.0;
+
+        Missile m1 = new Missile(missileStart, missileDirection, missileSpeed);
+        return m1;
+    }
     
     //function to handle when drawing is clicked
     public void mouseClicked(MouseEvent e) {

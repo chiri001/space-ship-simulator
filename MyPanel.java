@@ -307,15 +307,12 @@ public class MyPanel extends JPanel {
             btn.set_size(60, 50);
             panel.add(btn, constraint); //add to panel and set constraint
         }
-        else {
-            //other buttons
-            MyButton btn = new MyButton(btnTxt);
+        else if(("Z(-)".equals(btnTxt)) || ("Z(+)".equals(btnTxt))) {
+            ZoomButton btn = new ZoomButton(btnTxt, map);
             btn.set_btn_color(color); //set button color
             btn.set_size(60, 50);
             panel.add(btn, constraint); //add to panel and set constraint
         }
-        
-
     }
     
 }

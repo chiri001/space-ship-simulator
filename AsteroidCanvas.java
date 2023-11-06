@@ -26,7 +26,7 @@ public class AsteroidCanvas implements DrawingCanvas, MouseListener {
     private double def_xOffset;
     private double def_yOffset;
     private Timer asteroidTimer;
-    private int speed = 200;
+    private int speed = 150;
     private MyMap myMap;
     private int highestY;
     private Polygon asteroid;

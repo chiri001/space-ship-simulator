@@ -28,7 +28,7 @@ public class PlanetCanvas implements DrawingCanvas,  MouseListener{
     private int population;
     private int scale = 15;
     private double move = 0.05;
-    private int speed = 600;
+    private int speed = 200;
     private double def_xOffset;
     private double def_yOffset;
     private Timer planetTimer;

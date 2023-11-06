@@ -25,7 +25,7 @@ public class SpaceDebriCanvas implements DrawingCanvas, MouseListener {
     private double yOffset;
     private int scale = 15;
     private double move = 0.05;
-    private int speed = 150;
+    private int speed = 120;
     private Timer debriTimer;
     private MyMap myMap;
     private int highestY;
